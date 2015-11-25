@@ -9,14 +9,18 @@ Map::Map()
 
 case_type Map::get_occ_case(unsigned int x, unsigned int y) const
 {
-	if (x >= 19 || y >= 19)
+	if (x >= Map::Size || y >= Map::Size)
 	{
 		std::stringstream ss;
 		ss << "The position ("
-		   << x
-		   << ", "
-		   << y
-		   << ") is superior than (19, 19)";
+			 << x
+			 << ", "
+			 << y
+			 << ") is superior than ("
+			 << Map::Size
+			 << ", "
+			 << Map::Size
+			 << ")";
 		throw std::out_of_range(ss.str());
 	}
 	return (_map[x][y].occupancy);
@@ -24,14 +28,18 @@ case_type Map::get_occ_case(unsigned int x, unsigned int y) const
 
 void Map::set_occ_case(unsigned int x, unsigned int y, case_type content)
 {
-	if (x >= 19 || y >= 19)
+	if (x >= Map::Size || y >= Map::Size)
 	{
 		std::stringstream ss;
 		ss << "The position ("
 		   << x
 		   << ", "
 		   << y
-		   << ") is superior than (19, 19)";
+		   << ") is superior than ("
+			 << Map::Size
+			 << ", "
+			 << Map::Size
+			 << ")";
 		throw std::out_of_range(ss.str());
 	}
 	_map[x][y].occupancy = content;
@@ -39,9 +47,9 @@ void Map::set_occ_case(unsigned int x, unsigned int y, case_type content)
 
 void Map::print_occ_map() const
 {
-	for (int y = 0; y < 19; ++y)
+	for (size_t y = 0; y < Map::Size; ++y)
 	{
-		for (int x = 0; x < 19; ++x)
+		for (size_t x = 0; x < Map::Size; ++x)
 		{
 			switch (get_occ_case(x, y))
 			{
@@ -62,14 +70,18 @@ void Map::print_occ_map() const
 
 void Map::set_ref_case(unsigned int x, unsigned int y, case_ref_type content)
 {
-	if (x >= 19 || y >= 19)
+	if (x >= Map::Size || y >= Map::Size)
 	{
 		std::stringstream ss;
 		ss << "The position ("
 		   << x
 		   << ", "
 		   << y
-		   << ") is superior than (19, 19)";
+		   << ") is superior than ("
+			 << Map::Size
+			 << ", "
+			 << Map::Size
+			 << ")";
 		throw std::out_of_range(ss.str());
 	}
 	_map[x][y].referee = content;
@@ -77,14 +89,18 @@ void Map::set_ref_case(unsigned int x, unsigned int y, case_ref_type content)
 
 case_ref_type Map::get_ref_case(unsigned int x, unsigned int y) const
 {
-	if (x >= 19 || y >= 19)
+	if (x >= Map::Size || y >= Map::Size)
 	{
 		std::stringstream ss;
 		ss << "The position ("
-		   << x
-		   << ", "
-		   << y
-		   << ") is superior than (19, 19)";
+			 << x
+			 << ", "
+			 << y
+			 << ") is superior than ("
+			 << Map::Size
+			 << ", "
+			 << Map::Size
+			 << ")";
 		throw std::out_of_range(ss.str());
 	}
 	return (_map[x][y].referee);

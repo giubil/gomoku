@@ -27,8 +27,9 @@ typedef struct __attribute__((__packed__)) case_field {
 
 class Map
 {
+	const static size_t Size = 19;
 private:
-	case_field _map[19][19];
+	case_field _map[Map::Size][Map::Size];
 public:
 	Map();
 	case_type get_occ_case(unsigned int x, unsigned int y) const;
