@@ -27,6 +27,7 @@ typedef struct __attribute__((__packed__)) case_field {
 
 class Map
 {
+public:
 	const static size_t Size = 19;
 private:
 	case_field _map[Map::Size][Map::Size];
