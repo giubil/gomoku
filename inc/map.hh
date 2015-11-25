@@ -11,10 +11,11 @@ enum case_type
     BLACK = 2  //X
 };
 
-typedef struct case_field {
-  std::uint32_t data_black : 31;
-  std::uint32_t data_white : 31;
+typedef struct __attribute__((__packed__)) case_field {
+  std::uint32_t data_black : 30;
+  std::uint32_t data_white : 30;
   case_type occupancy : 2;
+  std::uint8_t referee : 2;
 } case_field;
 
 class Map
