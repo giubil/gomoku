@@ -8,7 +8,7 @@ enum case_type
 {
 	EMPTY = 0, //-
 	WHITE = 1, //O
-	BLACK = 2 //X
+	BLACK = 2 //X	
 };
 
 enum case_ref_type
