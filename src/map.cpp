@@ -2,38 +2,30 @@
 
 Map::Map()
 {
-    memset(&_map, sizeof(line_field) * 19, 0);
+    memset(&_map, 0, sizeof(_map));
 }
 
-case_type Map::get_case(unsigned int x, unsigned int y) const
+case_type Map::get_occ_case(unsigned int x, unsigned int y) const
 {
-    uint64_t buff;
-    unsigned char ret;
-
-    buff = 3 << (x * 2);
-    ret = (_map[y].line & buff) >> (x * 2);
-    return static_cast<case_type>(ret);
+  if (x >= 19 || y >= 19)
+    return (case_type::ERR);
+  return (_map[x][y].occupancy);
 }
 
-void Map::set_case(unsigned int x, unsigned int y, case_type content)
+void Map::set_occ_case(unsigned int x, unsigned int y, case_type content)
 {
-    unsigned char buff;
-    uint64_t mask;
-
-    buff = static_cast<unsigned char>(content);
-    mask = ~(3 << ((uint64_t)(x) * 2));
-    std::cout << (unsigned int)~(3 << (x * 2)) << std::endl;
-    _map[y].line &= mask;
-    _map[y].line += buff << (x * 2);
+  if (x >= 19 || y >= 19)
+    return;
+  _map[x][y].occupancy = content;
 }
 
-void Map::print_map() const
+void Map::print_occ_map() const
 {
     for (int y = 0; y < 19; ++y)
     {
         for (int x = 0; x < 19; ++x)
         {
-            switch (get_case(x, y))
+            switch (get_occ_case(x, y))
             {
                 case EMPTY:
                     std::cout << "-";

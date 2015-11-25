@@ -7,12 +7,13 @@ MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
 CXXFLAGS	+= -Wall -Wextra -W -std=c++14
-LDFLAGS		= -ldl -pthread
+# LDFLAGS		= -ldl -pthread
 # LDFLAGS		+= -L./lib
 # LDFLAGS		+= -Wl,--rpath=./lib
 
 SRC_PATH	= src
-SRC				= main.cpp
+SRC				= main.cpp \
+						map.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)

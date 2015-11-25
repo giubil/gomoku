@@ -3,14 +3,9 @@
 
 #include <iostream>
 #include <cstring>
-#include <cstdint>
+// #include <cstdint>
 
-typedef struct line_field
-{
-    uint64_t line : 48;
-} line_field;
-
-enum case_type
+enum case_type : uint8_t
 {
     EMPTY = 0, //-
     WHITE,     //O
@@ -18,15 +13,21 @@ enum case_type
     ERR        //E
 };
 
+typedef struct case_field {
+  std::uint32_t data_black : 31;
+  std::uint32_t data_white : 31;
+  case_type occupancy : 2;
+} case_field;
+
 class Map
 {
 private:
-    line_field _map[19];
+    case_field _map[19][19];
 public:
     Map();
-    case_type get_case(unsigned int x, unsigned int y) const;
-    void set_case(unsigned int x, unsigned int y, case_type content);
-    void print_map() const;
+    case_type get_occ_case(unsigned int x, unsigned int y) const;
+    void set_occ_case(unsigned int x, unsigned int y, case_type content);
+    void print_occ_map() const;
 };
 
 /*class Map
