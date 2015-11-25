@@ -13,14 +13,14 @@ case_type Map::get_occ_case(unsigned int x, unsigned int y) const
 	{
 		std::stringstream ss;
 		ss << "The position ("
-			 << x
-			 << ", "
-			 << y
-			 << ") is superior than ("
-			 << Map::Size
-			 << ", "
-			 << Map::Size
-			 << ")";
+		   << x
+		   << ", "
+		   << y
+		   << ") is superior than ("
+		   << Map::Size
+		   << ", "
+		   << Map::Size
+		   << ")";
 		throw std::out_of_range(ss.str());
 	}
 	return (_map[x][y].occupancy);
@@ -36,10 +36,10 @@ void Map::set_occ_case(unsigned int x, unsigned int y, case_type content)
 		   << ", "
 		   << y
 		   << ") is superior than ("
-			 << Map::Size
-			 << ", "
-			 << Map::Size
-			 << ")";
+		   << Map::Size
+		   << ", "
+		   << Map::Size
+		   << ")";
 		throw std::out_of_range(ss.str());
 	}
 	_map[x][y].occupancy = content;
@@ -78,10 +78,10 @@ void Map::set_ref_case(unsigned int x, unsigned int y, case_ref_type content)
 		   << ", "
 		   << y
 		   << ") is superior than ("
-			 << Map::Size
-			 << ", "
-			 << Map::Size
-			 << ")";
+		   << Map::Size
+		   << ", "
+		   << Map::Size
+		   << ")";
 		throw std::out_of_range(ss.str());
 	}
 	_map[x][y].referee = content;
@@ -93,14 +93,14 @@ case_ref_type Map::get_ref_case(unsigned int x, unsigned int y) const
 	{
 		std::stringstream ss;
 		ss << "The position ("
-			 << x
-			 << ", "
-			 << y
-			 << ") is superior than ("
-			 << Map::Size
-			 << ", "
-			 << Map::Size
-			 << ")";
+		   << x
+		   << ", "
+		   << y
+		   << ") is superior than ("
+		   << Map::Size
+		   << ", "
+		   << Map::Size
+		   << ")";
 		throw std::out_of_range(ss.str());
 	}
 	return (_map[x][y].referee);
