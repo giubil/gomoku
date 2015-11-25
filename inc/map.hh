@@ -3,14 +3,12 @@
 
 #include <iostream>
 #include <cstring>
-// #include <cstdint>
 
-enum case_type : uint8_t
+enum case_type
 {
     EMPTY = 0, //-
-    WHITE,     //O
-    BLACK,     //X
-    ERR        //E
+    WHITE = 1, //O
+    BLACK = 2  //X
 };
 
 typedef struct case_field {
@@ -29,25 +27,5 @@ public:
     void set_occ_case(unsigned int x, unsigned int y, case_type content);
     void print_occ_map() const;
 };
-
-/*class Map
-{
-private:
-  int _x;
-  int _y;
-  int *_map;
-public:
-  Map(int x = 10, int y = 10);
-  Map(const Map &);
-  ~Map();
-  void displayMap() const;
-  int getSizeX() const;
-  int getSizeY() const;
-  int getMapValue(int x, int y) const;
-  void setMapValue(int x, int y, int val);
-  bool checkCase(int x, int y) const;
-  int hasWon() const;
-  bool isFull() const;
-};*/
 
 #endif
