@@ -59,3 +59,33 @@ void Map::print_occ_map() const
 		std::cout << std::endl;
 	}
 }
+
+void Map::set_ref_case(unsigned int x, unsigned int y, case_ref_type content)
+{
+	if (x >= 19 || y >= 19)
+	{
+		std::stringstream ss;
+		ss << "The position ("
+		   << x
+		   << ", "
+		   << y
+		   << ") is superior than (19, 19)";
+		throw std::out_of_range(ss.str());
+	}
+	_map[x][y].referee = content;
+}
+
+case_ref_type Map::get_ref_case(unsigned int x, unsigned int y) const
+{
+	if (x >= 19 || y >= 19)
+	{
+		std::stringstream ss;
+		ss << "The position ("
+		   << x
+		   << ", "
+		   << y
+		   << ") is superior than (19, 19)";
+		throw std::out_of_range(ss.str());
+	}
+	return (_map[x][y].referee);
+}
