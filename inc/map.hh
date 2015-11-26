@@ -31,13 +31,16 @@ public:
 	const static size_t Size = 19;
 private:
 	case_field _map[Map::Size][Map::Size];
+	void check_case_exist(unsigned x, unsigned y) const;
 public:
 	Map();
 	case_type get_occ_case(unsigned int x, unsigned int y) const;
 	void set_occ_case(unsigned int x, unsigned int y, case_type content);
 	void print_occ_map() const;
+	case_ref_type get_ref_case(unsigned int x, unsigned int y) const;
 	void set_ref_case(unsigned int x, unsigned int y, case_ref_type content);
-	case_ref_type get_ref_case(unsigned int x, unsigned int y ) const;
+	std::uint32_t get_AI_data(unsigned x, unsigned y, case_type c) const;
+	void set_AI_data(unsigned x, unsigned y, case_type c, std::uint32_t value);
 };
 
 #endif
