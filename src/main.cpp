@@ -4,7 +4,7 @@
 int main()
 {
 	Map yolo;
-	Referee referee(&yolo);
+	Referee referee(yolo);
 
 	yolo.set_occ_case(0, 0, WHITE);
 	yolo.set_occ_case(0, 1, BLACK);
