@@ -1,8 +1,4 @@
-#include <map>
-#include <tuple>
 #include "referee.hh"
-
-#include <iostream>
 
 Referee::Referee(Map &map) : _map(map) {
 }
@@ -12,31 +8,63 @@ void Referee::feed_map(Map &map)
 	_map = map;
 }
 
+bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2] ,unsigned int x, unsigned int y) const
+{
+    int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
+    unsigned int buff_x, buff_y;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        if (i % 4 != direction % 4)
+        {
+            for (int j = 0; j < 2; ++j)
+                for (int k = 0; k < 4; ++k)
+                {
+                    buff_x = x + (tab_buff[i][0] * (j == 0 ? pattern_tab[k][0] : pattern_tab_inv[k][0]));
+                    buff_y = y + (tab_buff[i][1] * (j == 0 ? pattern_tab[k][1] : pattern_tab_inv[k][0]));
+                    if (buff_x >= Map::Size || buff_y >= Map::Size)
+                        break;
+                    if ((j == 0 ? pattern_tab[k][1] :  pattern_tab_inv[k][1]) != _map.get_occ_case(buff_x, buff_y))
+                        break;
+                    else if (k == 3)
+                        return (true);
+                }
+        }
+    }
+    return (false);
+}
+
 player_won Referee::five_in_a_row() const
 {
-	int tab_buff[][2] = {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
-	unsigned int buff_x, buff_y, buff_val;
+    int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
+    unsigned int buff_x, buff_y, buff_val;
 
-	for (unsigned int x = 0; x < Map::Size; ++x)
-		for (unsigned int y = 0; y < Map::Size; ++y)
-		{
-			buff_val = _map.get_occ_case(x, y);
-			if (buff_val != case_type::EMPTY)
-				for (size_t i = 0; i < 8; ++i)
-					for (size_t j = 0; j < 5; j++)
-					{
-						buff_x = x + (tab_buff[i][0] * j);
-						buff_y = y + (tab_buff[i][1] * j);
-						if (!(buff_x >= Map::Size || buff_y >= Map::Size))
-						{
-							if (buff_val != _map.get_occ_case(buff_x, buff_y))
-								break;
-							else if (j == 4)
-								return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
-						}
-					}
-		}
-	return (player_won::NONE);
+    for (unsigned int x = 0; x < Map::Size; ++x)
+        for (unsigned int y = 0; y < Map::Size; ++y)
+        {
+            buff_val = _map.get_occ_case(x, y);
+            if (buff_val != case_type::EMPTY)
+            {
+                int pattern_tab[][2] = {{-1, case_type::EMPTY}, {0, static_cast<int>(buff_val)}, {1, static_cast<int>(buff_val)}, {2, (buff_val == case_type::WHITE ? case_type::BLACK : case_type::WHITE)}};
+                int pattern_tab_inv[][2] = {{-2, case_type::EMPTY}, {-1, static_cast<int>(buff_val)}, {0, static_cast<int>(buff_val)}, {1, (buff_val == case_type::WHITE ? case_type::BLACK : case_type::WHITE)}};
+                for (size_t i = 0; i < 8; ++i)
+                    for (size_t j = 0; j < 5; j++)
+                    {
+                        buff_x = x + (tab_buff[i][0] * j);
+                        buff_y = y + (tab_buff[i][1] * j);
+                        if (!(buff_x >= Map::Size || buff_y >= Map::Size))
+                        {
+                            if (buff_val != _map.get_occ_case(buff_x, buff_y))
+                                break;
+                            if (find_pattern(i , pattern_tab, pattern_tab_inv, buff_x, buff_y))
+                                return (player_won::NONE);
+                            else if (j == 4)
+                                return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
+                        }
+                    }
+            }
+        }
+    return (player_won::NONE);
 }
 
 void Referee::calc() const
