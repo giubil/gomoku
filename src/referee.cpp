@@ -1,6 +1,6 @@
 #include "referee.hh"
 
-Referee::Referee(Map &map) : _map(map) {
+Referee::Referee(Map &map) : _map(map), _result(player_won::NONE) {
 }
 
 void Referee::feed_map(Map &map)
@@ -67,11 +67,6 @@ player_won Referee::five_in_a_row() const
     return (player_won::NONE);
 }
 
-void Referee::calc() const
-{
-	std::cout << five_in_a_row() << std::endl;
-}
-
 void Referee::set_disallowed() const
 {
 	int tab_patern[][9] = {{1, 2, 2, 1, 1, 1, 0, 0, 0},
@@ -123,4 +118,15 @@ void Referee::set_disallowed() const
 				}
 			}
 		}
+}
+
+void Referee::calc() const
+{
+    _result = five_in_a_row();
+    set_disallowed();
+}
+
+player_wone Referee::get_winner() const
+{
+    return (_result);
 }
