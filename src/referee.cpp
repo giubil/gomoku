@@ -91,10 +91,7 @@ void Referee::set_disallowed() const
 								white++;
 						}
 					}
-					if (black > 1)
-						_map->set_ref_case(x, y, static_cast<case_ref_type>(_map->get_ref_case(x, y) | DISALLOW_BLACK));
-					if (white > 1)
-						_map->set_ref_case(x, y, static_cast<case_ref_type>(_map->get_ref_case(x, y) | DISALLOW_WHITE));
+					_map->set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
 				}
 			}
 		}
