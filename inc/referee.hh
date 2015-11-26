@@ -13,11 +13,11 @@ enum player_won
 class Referee
 {
 private:
-	Map *_map;
+	Map &_map;
 	player_won five_in_a_row() const;
 public:
-	Referee(Map *map);
-	void feed_map(Map *map);
+	Referee(Map &map);
+	void feed_map(Map &map);
 	void calc() const;
 	void set_disallowed() const;
 };

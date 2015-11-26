@@ -4,10 +4,10 @@
 
 #include <iostream>
 
-Referee::Referee(Map *map) : _map(map) {
+Referee::Referee(Map &map) : _map(map) {
 }
 
-void Referee::feed_map(Map *map)
+void Referee::feed_map(Map &map)
 {
 	_map = map;
 }
@@ -20,7 +20,7 @@ player_won Referee::five_in_a_row() const
 	for (unsigned int x = 0; x < Map::Size; ++x)
 		for (unsigned int y = 0; y < Map::Size; ++y)
 		{
-			buff_val = _map->get_occ_case(x, y);
+			buff_val = _map.get_occ_case(x, y);
 			if (buff_val != case_type::EMPTY)
 				for (size_t i = 0; i < 8; ++i)
 					for (size_t j = 0; j < 5; j++)
@@ -29,7 +29,7 @@ player_won Referee::five_in_a_row() const
 						buff_y = y + (tab_buff[i][1] * j);
 						if (!(buff_x >= Map::Size || buff_y >= Map::Size))
 						{
-							if (buff_val != _map->get_occ_case(buff_x, buff_y))
+							if (buff_val != _map.get_occ_case(buff_x, buff_y))
 								break;
 							else if (j == 4)
 								return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
@@ -72,7 +72,7 @@ void Referee::set_disallowed() const
 						buff_y = y + (tab_buff[k][1] * (j - 4));
 						if (buff_x >= Map::Size || buff_y >= Map::Size)
 							break;
-						buff_val = _map->get_occ_case(buff_x, buff_y);
+						buff_val = _map.get_occ_case(buff_x, buff_y);
 						if ((tab_patern[i][j] == 2 && buff_val == EMPTY)
 						    || (tab_patern[i][j] == 1 && buff_val != EMPTY))
 							break;
@@ -91,7 +91,7 @@ void Referee::set_disallowed() const
 								white++;
 						}
 					}
-					_map->set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
+					_map.set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
 				}
 			}
 		}
