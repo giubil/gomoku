@@ -53,70 +53,48 @@ void Referee::set_disallowed() const
 			       {0, 0, 1, 2, 1, 1, 2, 1, 0},
 			       {0, 0, 0, 1, 1, 2, 2, 1, 0},
 			       {0, 0, 0, 1, 1, 1, 2, 2, 1}};
-	int tab_buff[][2] = {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
-	// int tab_buff[][2] = {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {-1, -1}, {1, -1}};
-	unsigned int buff_x, buff_y;
-	case_type color, buff_val;
+	int tab_buff[][2] = {{0, -1}, {1, 0}, {1, 1}, {-1, 1}};
+	unsigned buff_x, buff_y;
 
-
-	for (unsigned int x = 1; x < Map::Size - 1; ++x)
-		for (unsigned int y = 1; y < Map::Size - 1; ++y)
+	for (unsigned x = 1; x < Map::Size - 1; ++x)
+		for (unsigned y = 1; y < Map::Size - 1; ++y)
 		{
-			unsigned int black = 0, white = 0;
-			for (unsigned int i = 1; i < 7; ++i)
+			unsigned black = 0, white = 0;
+			for (unsigned i = 1; i < 7; ++i)
 			{
-				for (unsigned int k = 0; k <= 8; ++k)
+				for (unsigned k = 0; k <= 8; ++k)
 				{
-					color = EMPTY;
 					unsigned j_max = 5 + (i / 2 + ((i % 2) ? 1 : 0));
-					for (unsigned int j = j_max - 5; j < j_max; ++j)
+					case_type color = EMPTY, buff_val;
+					for (unsigned j = j_max - 5; j < j_max; ++j)
 					{
-						if (tab_patern[i][j] == 0)
-						{
-							std::cout << "3" << std::endl;
-							throw std::out_of_range("this should never ever happend (check your privileges)"); //TODO: remove this
-						}
-
 						buff_x = x + (tab_buff[k][0] * (j - 4));
 						buff_y = y + (tab_buff[k][1] * (j - 4));
 						if (buff_x >= Map::Size || buff_y >= Map::Size)
-						{
 							break;
-						}
 						buff_val = _map->get_occ_case(buff_x, buff_y);
-
-
 						if ((tab_patern[i][j] == 2 && buff_val == EMPTY)
 						    || (tab_patern[i][j] == 1 && buff_val != EMPTY))
-						{
 							break;
-						}
 						if (tab_patern[i][j] == 2)
 						{
 							if (color == EMPTY)
-							{
 								color = buff_val;
-							}
 							else if (color != buff_val)
-							{
 								break;
-							}
 						}
-						if (j == j_max - 1) {
+						if (j == j_max - 1)
+						{
 							if (color == BLACK)
 								black++;
-							else if (color == WHITE)
-								white++;
 							else
-								throw std::out_of_range("this should never ever happend (check your privileges bis)"); //TODO: remove this
+								white++;
 						}
 					}
-					if (black > 2) {
+					if (black > 1)
 						_map->set_ref_case(x, y, static_cast<case_ref_type>(_map->get_ref_case(x, y) | DISALLOW_BLACK));
-					}
-					if (white > 2) {
+					if (white > 1)
 						_map->set_ref_case(x, y, static_cast<case_ref_type>(_map->get_ref_case(x, y) | DISALLOW_WHITE));
-					}
 				}
 			}
 		}
