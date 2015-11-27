@@ -1,97 +1,110 @@
-#include <stdexcept>
-#include <sstream>
 #include "map.hh"
 
-Map::Map()
+Map::Map(int x, int y) : _x(x), _y(y)
 {
-	memset(&_map, 0, sizeof(_map));
+    _map = new int[_x * _y];
+    memset(_map, _x * _y * sizeof(int), 0);
 }
 
-void Map::check_case_exist(unsigned x, unsigned y) const
+Map::Map(const Map &s) : _x(s._x), _y(s._y)
 {
-	if (x >= Map::Size || y >= Map::Size)
-	{
-		std::stringstream ss;
-		ss << "The position ("
-		   << x
-		   << ", "
-		   << y
-		   << ") is superior than ("
-		   << Map::Size
-		   << ", "
-		   << Map::Size
-		   << ")";
-		throw std::out_of_range(ss.str());
-	}
+    _map = new int[_x * _y];
+    for (int x = 0; x < _y; ++x)
+    for (int y = 0; y < _y; ++y)
+    _map[y * _x + x] = s._map[y * _x + x];
 }
 
-case_type Map::get_occ_case(unsigned int x, unsigned int y) const
+Map::~Map()
 {
-	check_case_exist(x, y);
-	return (_map[x][y].occupancy);
+    delete _map;
 }
 
-void Map::set_occ_case(unsigned int x, unsigned int y, case_type content)
+void Map::displayMap() const
 {
-	check_case_exist(x, y);
-	_map[x][y].occupancy = content;
+    for (int y = 0; y < _y; ++y)
+    {
+        for (int x = 0; x < _x; ++x)
+        {
+            switch (_map[y * _x + x]) {
+                case 0:
+                std::cout << "-";
+                break;
+                case 1:
+                std::cout << "X";
+                break;
+                case 2:
+                std::cout << "O";
+                break;
+            }
+        }
+        std::cout << std::endl;
+    }
 }
 
-void Map::print_occ_map() const
+int Map::getSizeX() const
 {
-	for (size_t y = 0; y < Map::Size; ++y)
-	{
-		for (size_t x = 0; x < Map::Size; ++x)
-		{
-			switch (get_occ_case(x, y))
-			{
-			case EMPTY:
-				std::cout << "-";
-				break;
-			case WHITE:
-				std::cout << "O";
-				break;
-			case BLACK:
-				std::cout << "X";
-				break;
-			}
-		}
-		std::cout << std::endl;
-	}
+    return (_x);
 }
 
-void Map::set_ref_case(unsigned int x, unsigned int y, case_ref_type content)
+int Map::getSizeY() const
 {
-	check_case_exist(x, y);
-	_map[x][y].referee = content;
+    return (_y);
 }
 
-case_ref_type Map::get_ref_case(unsigned int x, unsigned int y) const
+int Map::getMapValue(int x, int y) const
 {
-	check_case_exist(x, y);
-	return (_map[x][y].referee);
+    if (x < 0 || x >= _x || y < 0 || y >= _y)
+    return (-1);
+    return (_map[y * _x + x]);
 }
 
-std::uint32_t Map::get_AI_data(unsigned x, unsigned y, case_type c) const
+void Map::setMapValue(int x, int y, int val)
 {
-	switch (c) {
-	case BLACK:
-		return (_map[x][y].data_black);
-	case WHITE:
-		return (_map[x][y].data_white);
-	default:
-		throw std::out_of_range("Can't get the AI data of something not BLACK or WHITE");
-	}
+    if (x < 0 || x >= _x || y < 0 || y >= _y)
+    return ;
+    _map[y * _x + x] = val;
 }
 
-void Map::set_AI_data(unsigned x, unsigned y, case_type c, std::uint32_t value)
+bool Map::checkCase(int x, int y) const
 {
-	switch (c) {
-	case BLACK:
-		_map[x][y].data_black = value;
-	case WHITE:
-		_map[x][y].data_white = value;
-	default:
-		throw std::out_of_range("Can't set the AI data of something not BLACK or WHITE");
-	}
+    if (x < 0 || x >= _x || y < 0 || y >= _y)
+    return (false);
+    if (_map[y * _x + x] != 0)
+    return (false);
+    return (true);
 }
+
+int Map::hasWon() const
+{
+    int tab[][2] = {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+    int testX, testY, val;
+    for (int x = 0; x < _x; ++x)
+    for (int y = 0; y < _y; ++y)
+    for (int j = 0; j < 8; ++j)
+    {
+        if (_map[y * _x + x] != 0)
+        {
+            val = _map[y * _x + x];
+            for (int k = 0; k < 3; ++k)
+            {
+                testX = x + (tab[j][0] * k);
+                testY = y + (tab[j][1] * k);
+                if (testX < 0 || testX >= _x || testY < 0 || testY >= _y
+                    || _map[testY * _x + testX] != val)
+                    val = -1;
+                }
+                if (val != -1)
+                return (val);
+            }
+        }
+        return (0);
+    }
+
+    bool Map::isFull() const
+    {
+        for (int x = 0; x < _x; ++x)
+        for (int y = 0; y < _y; ++y)
+        if (_map[y * _x + x] == 0)
+        return (false);
+        return (true);
+    }

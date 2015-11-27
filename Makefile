@@ -12,16 +12,17 @@ CXXFLAGS	+= -Wall -Wextra -W -std=c++14
 # LDFLAGS		+= -Wl,--rpath=./lib
 
 SRC_PATH	= src
-SRC				= main.cpp \
-						map.cpp \
-						referee.cpp
+SRC		= ai.cpp \
+		  main.cpp \
+		  map.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
 
 INC_PATH	= inc
-INC		= map.hh \
-				referee.hh
+INC		= ai.hh \
+		  map.hh \
+		  op.hh
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 
