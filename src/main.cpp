@@ -5,6 +5,7 @@ int main()
   Map yolo(3, 3);
   AI  *buff;
 
+  std::cout << yolo.getSizeX() << " " << yolo.getSizeY() << std::endl;
   yolo.displayMap();
   std::cout << std::endl;
   int x,y;
