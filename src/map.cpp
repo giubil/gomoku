@@ -3,7 +3,7 @@
 Map::Map(int x, int y) : _x(x), _y(y)
 {
     _map = new int[_x * _y];
-    memset(_map, _x * _y * sizeof(int), 0);
+    memset(_map, 0, _x * _y * sizeof(int));
 }
 
 Map::Map(const Map &s) : _x(s._x), _y(s._y)
