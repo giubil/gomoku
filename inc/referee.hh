@@ -20,7 +20,7 @@ private:
 public:
 	Referee(Map &map);
 	void feed_map(Map &map);
-	void calc() const;
+	void calc();
 	void set_disallowed() const;
     player_won get_winner() const;
 };

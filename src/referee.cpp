@@ -120,13 +120,13 @@ void Referee::set_disallowed() const
 		}
 }
 
-void Referee::calc() const
+void Referee::calc()
 {
     _result = five_in_a_row();
     set_disallowed();
 }
 
-player_wone Referee::get_winner() const
+player_won Referee::get_winner() const
 {
     return (_result);
 }
