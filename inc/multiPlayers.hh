@@ -1,36 +1,15 @@
-#ifndef MULTIPLAYERS_HH
-#define MULTIPLAYERS_HH
+#ifndef MULTIPLAYERS_HH_
+#define MULTIPLAYERS_HH_
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <iostream>
-#include <stdlib.h>
-#include <time.h>
-#include "referee.hh"
+#include "gameClassInterface.hh"
 
-class multiPlayers {
-private:
-    sf::RenderWindow _window;
-    sf::ContextSettings _settings;
-    sf::Event event;
-
-    sf::Texture _textTile;
-    sf::Texture _textBlack;
-    sf::Texture _textWhite;
-    sf::Texture _textSelectWhite;
-    sf::Texture _textSelectBlack;
-
-    std::vector<std::vector<sf::Sprite>> _tiles;
-
-    bool playerTurn = true;
-    sf::Vector2f lastSelected;
-
+class multiPlayers : public gameClassInterface {
 public:
     multiPlayers ();
     ~multiPlayers ();
     void setWindows(int width, int height);
-    int mainLoop(Map&, Referee&);
-    int eventsHandling(Map&, Referee&);
+    int mainLoop(Map&, Referee&, sf::RenderWindow &);
+    int eventsHandling(Map&, Referee&, sf::RenderWindow &);
 };
 
-#endif /* !MULTIPLAYERS_HH */
+#endif /* !MULTIPLAYERS_HH_ */

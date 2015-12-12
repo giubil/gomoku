@@ -1,15 +1,15 @@
 #include "map.hh"
 #include "referee.hh"
-#include "multiPlayers.hh"
+#include "menu.hh"
 #include <cstdlib>
 
 int main()
 {
 	Map yolo;
 	Referee referee(yolo);
-	multiPlayers Graphics;
+	Menu menu;
 
-	Graphics.setWindows(950,950);
-	Graphics.mainLoop(yolo, referee);
+	menu.setWindows(950,950);
+	menu.menuLoop(yolo, referee);
     return (0);
 }

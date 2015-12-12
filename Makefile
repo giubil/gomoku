@@ -17,7 +17,8 @@ SRC_PATH	= src
 SRC				= main.cpp \
 						map.cpp \
 						referee.cpp \
-						multiPlayers.cpp
+						multiPlayers.cpp \
+						menu.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
@@ -25,7 +26,9 @@ OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
 INC_PATH	= inc
 INC		= map.hh \
 				referee.hh \
-				multiPlayers.hh
+				gameClassInterface.hh \
+				multiPlayers.hh \
+				menu.hh
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 
