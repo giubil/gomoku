@@ -11,17 +11,21 @@ CXXFLAGS	+= -Wall -Wextra -W -std=c++14
 # LDFLAGS		+= -L./lib
 # LDFLAGS		+= -Wl,--rpath=./lib
 
+LDFLAGS_GRAPHIC	= -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
+
 SRC_PATH	= src
 SRC				= main.cpp \
 						map.cpp \
-						referee.cpp
+						referee.cpp \
+						multiPlayers.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
 
 INC_PATH	= inc
 INC		= map.hh \
-				referee.hh
+				referee.hh \
+				multiPlayers.hh
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 
@@ -34,7 +38,7 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp $(DEP)
 ##
 
 $(NAME): $(OBJ)
-	$(CXX) $(OBJ) $(LDFLAGS) -o $(NAME)
+	$(CXX) $(OBJ) $(LDFLAGS) $(LDFLAGS_GRAPHIC) -o $(NAME)
 
 all: $(NAME)
 
