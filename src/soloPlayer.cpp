@@ -1,14 +1,14 @@
-#include "../inc/multiPlayers.hh"
+#include "../inc/soloPlayer.hh"
 
-multiPlayers::multiPlayers()
+soloPlayer::soloPlayer()
 {
 }
 
-multiPlayers::~multiPlayers()
+soloPlayer::~soloPlayer()
 {
 }
 
-int multiPlayers::mainLoop(Map &map, Referee &ref, sf::RenderWindow &_window)
+int soloPlayer::mainLoop(Map &map, Referee &ref, sf::RenderWindow &_window)
 {
   while (_window.isOpen())
   {
@@ -33,7 +33,7 @@ int multiPlayers::mainLoop(Map &map, Referee &ref, sf::RenderWindow &_window)
   return (0);
 }
 
-int multiPlayers::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &_window)
+int soloPlayer::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &_window)
 {
   int x = 0;
   int y = 0;
@@ -55,13 +55,7 @@ int multiPlayers::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &_wind
                 _tiles[x][y].setTexture(_textWhite);
                 playerTurn = !playerTurn;
                 ref.calc();
-            }
-            else if (map.get_occ_case(x,y) == EMPTY)
-            {
-                map.set_occ_case(x,y, BLACK);
-                _tiles[x][y].setTexture(_textBlack);
-                playerTurn = !playerTurn;
-                ref.calc();
+                // SAY TO IA TO PLAY
             }
         break;
         default:
