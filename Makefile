@@ -19,7 +19,8 @@ SRC				= main.cpp \
 					Referee.cpp \
 					Menu.cpp \
 					AGame.cpp \
-					Game.cpp
+					Game.cpp \
+					Player.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
@@ -29,7 +30,9 @@ INC		= Map.hh \
 				Referee.hh \
 				AGame.hh \
 				Game.hh \
-				Menu.hh
+				Menu.hh \
+				IPlayer.hh \
+				Player.hh
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 
