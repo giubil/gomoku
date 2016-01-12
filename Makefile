@@ -18,7 +18,8 @@ SRC				= main.cpp \
 						map.cpp \
 						referee.cpp \
 						multiPlayers.cpp \
-						menu.cpp
+						menu.cpp \
+						gameClassInterface.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)

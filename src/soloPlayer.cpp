@@ -8,31 +8,6 @@ soloPlayer::~soloPlayer()
 {
 }
 
-int soloPlayer::mainLoop(Map &map, Referee &ref, sf::RenderWindow &_window)
-{
-  while (_window.isOpen())
-  {
-      eventsHandling(map, ref, _window);
-      _window.clear();
-      for (int i = 0; i < 19; i++)
-      {
-          _tiles.push_back(std::vector<sf::Sprite>());
-          for (int j = 0; j < 19; j++)
-          {
-              _window.draw(_tiles[i][j]);
-          }
-      }
-    _window.display();
-    if (ref.get_winner() != NONE)
-      _window.close();
-  }
-  if (ref.get_winner() == WHITE_WON)
-    std::cout << "White player won !" << std::endl;
-  else if (ref.get_winner() == BLACK_WON)
-    std::cout << "Black player won !" << std::endl;
-  return (0);
-}
-
 int soloPlayer::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &_window)
 {
   int x = 0;
