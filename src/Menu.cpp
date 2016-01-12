@@ -1,5 +1,5 @@
 #include "menu.hh"
-#include "multiPlayers.hh"
+#include "game.hh"
 
 Menu::Menu()
 {
@@ -29,7 +29,14 @@ int Menu::menuLoop(Map &map, Referee &ref)
               break;
               case sf::Event::MouseButtonPressed:
                   std::cout << "click" << std::endl;
-                  Game = new multiPlayers();
+                  try
+                  {
+                    _game = new Game();
+                  }
+                  catch (std::runtime_error e)
+                  {
+                    std::cout << e.what() << std::endl;
+                  }
                   closeMenu = true;
               break;
               default:
@@ -40,7 +47,7 @@ int Menu::menuLoop(Map &map, Referee &ref)
         // PRINT SOMETHING HERE
         _window.display();
     }
-    if (Game != NULL)
-        Game->mainLoop(map, ref, _window);
+    if (_game != NULL)
+        _game->mainLoop(map, ref, _window);
     return (0);
 }

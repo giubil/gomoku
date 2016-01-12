@@ -1,7 +1,7 @@
 #ifndef MENU_HH_
 #define MENU_HH_
 
-#include "gameClassInterface.hh"
+#include "AGame.hh"
 
 class Menu
 {
@@ -9,7 +9,7 @@ private:
     sf::RenderWindow _window;
     sf::ContextSettings _settings;
     sf::Event event;
-    gameClassInterface *Game;
+    AGame *_game;
     bool closeMenu = false;
 
 public:

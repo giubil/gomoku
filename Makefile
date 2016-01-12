@@ -15,20 +15,21 @@ LDFLAGS_GRAPHIC	= -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 SRC_PATH	= src
 SRC				= main.cpp \
-						map.cpp \
-						referee.cpp \
-						multiPlayers.cpp \
-						menu.cpp
+					Map.cpp \
+					Referee.cpp \
+					Menu.cpp \
+					AGame.cpp \
+					Game.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
 
 INC_PATH	= inc
-INC		= map.hh \
-				referee.hh \
-				gameClassInterface.hh \
-				multiPlayers.hh \
-				menu.hh
+INC		= Map.hh \
+				Referee.hh \
+				AGame.hh \
+				Game.hh \
+				Menu.hh
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 
