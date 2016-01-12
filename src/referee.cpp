@@ -80,6 +80,7 @@ void Referee::set_disallowed() const
 	unsigned buff_x, buff_y;
 
 	for (unsigned x = 1; x < Map::Size - 1; ++x)
+	{
 		for (unsigned y = 1; y < Map::Size - 1; ++y)
 		{
 			unsigned black = 0, white = 0;
@@ -118,6 +119,35 @@ void Referee::set_disallowed() const
 				}
 			}
 		}
+	}
+}
+
+void Referee::remove_capture_pieces(unsigned x, unsigned y)
+{
+	int tab_patern[] = {2, 2, 1};
+	int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
+	unsigned buff_x, buff_y;
+	case_type color = _map.get_occ_case(x, y);
+
+	if (color == EMPTY)
+		return;
+	for (size_t i = 0; i < 8; i++)
+	{
+		for (size_t j = 1; j < 4; j++)
+		{
+			buff_x = x + (tab_buff[i][0] * j);
+			buff_y = y + (tab_buff[i][1] * j);
+			case_type buff = _map.get_occ_case(buff_x, buff_y);
+			if (buff == EMPTY || buff == color)
+				break;
+			else if (j == 3)
+			{
+				_map.set_occ_case(x + (tab_buff[i][0]), y + (tab_buff[i][1]), EMPTY);
+				_map.set_occ_case(x + (tab_buff[i][0] * 2), y + (tab_buff[i][1] * 2), EMPTY);
+				_captured[color - 1]++;
+			}
+		}
+	}
 }
 
 void Referee::calc()
