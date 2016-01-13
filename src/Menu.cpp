@@ -1,6 +1,8 @@
 #include "menu.hh"
 #include "game.hh"
 
+#include "Player.hh"
+
 Menu::Menu()
 {
 }
@@ -32,6 +34,12 @@ int Menu::menuLoop(Map &map, Referee &ref)
                   try
                   {
                     _game = new Game();
+                    //TODO : menu to choose
+
+                    // temp
+                    _game->setPlayer(0, new Player());
+                    _game->setPlayer(1, new Player());
+                    // !temp
                   }
                   catch (std::runtime_error e)
                   {
@@ -45,9 +53,11 @@ int Menu::menuLoop(Map &map, Referee &ref)
         }
         _window.clear();
         // PRINT SOMETHING HERE
+
+
         _window.display();
     }
-    if (_game != NULL)
+    if (_game != nullptr)
         _game->mainLoop(map, ref, _window);
     return (0);
 }

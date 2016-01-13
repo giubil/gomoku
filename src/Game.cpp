@@ -2,7 +2,10 @@
 
 int Game::mainLoop(Map &map, Referee &ref, sf::RenderWindow &window)
 {
-	while (window.isOpen())
+	if (_players[0] == nullptr || _players[1] == nullptr)
+		throw std::runtime_error("player missing");
+    _playerTurn = true;
+    while (window.isOpen())
 	{
 		eventsHandling(map, ref, window);
 		window.clear();
@@ -27,53 +30,53 @@ int Game::mainLoop(Map &map, Referee &ref, sf::RenderWindow &window)
 
 int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 {
-	int x = 0;
-	int y = 0;
-	while (window.pollEvent(_event))
-	{
-		sf::Vector2i position = sf::Mouse::getPosition(window);
-		sf::Vector2f worldPos = window.mapPixelToCoords(position);
-		x = worldPos.x / 50;
-		y = worldPos.y / 50;
-		switch (_event.type)
+	unsigned p = _playerTurn ? 0 : 1, x, y;
+	std::tuple<int, int, bool> const *t;
+	bool done = false;
+		t = _players[p]->play(map, ref, window);
+		if (t == nullptr)
+			throw std::runtime_error("player failed to return a valid position");
+		x = std::get<0>(*t);
+		y = std::get<1>(*t);
+		if (std::get<2>(*t))
 		{
-		case sf::Event::Closed:
-			window.close();
-			break;
-		case sf::Event::MouseButtonPressed:
-			if (_playerTurn && map.get_occ_case(x,y) == EMPTY)
-			{
-				map.set_occ_case(x,y, WHITE);
-				_tiles[x][y].setTexture(_textWhite);
-				_playerTurn = !_playerTurn;
-				ref.calc();
+			try {
+				if (map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_WHITE)
+                    && map.get_occ_case(x, y) == EMPTY)
+				{
+					done = false;
+				}
+				else
+				{
+					map.set_occ_case(x, y, _playerTurn ? WHITE : BLACK);
+					_tiles[x][y].setTexture(_playerTurn ? _textWhite : _textBlack);
+					ref.remove_capture_pieces(x, y);
+					ref.calc();
+                    _playerTurn =! _playerTurn;
+					done = true;
+				}
+			} catch (std::exception) {
+				done = false;
 			}
-			else if (map.get_occ_case(x,y) == EMPTY)
-			{
-				map.set_occ_case(x,y, BLACK);
-				_tiles[x][y].setTexture(_textBlack);
-				_playerTurn = !_playerTurn;
-				ref.calc();
-			}
-			break;
-		default:
-			break;
 		}
-		if (map.get_occ_case(_lastSelected.x / 50, _lastSelected.y / 50) == EMPTY)
-			_tiles[_lastSelected.x / 50][_lastSelected.y / 50].setTexture(_textTile);
-		if (x < 19 && x >= 0 && y < 19 && y >= 0 && map.get_occ_case(x, y) == EMPTY )
+		else
 		{
-			if (_playerTurn)
-				_tiles[x][y].setTexture(_textSelectWhite);
-			else
-				_tiles[x][y].setTexture(_textSelectBlack);
-			_lastSelected = worldPos;
-		}
+			if (map.get_occ_case(_lastSelected.x / 50, _lastSelected.y / 50) == EMPTY)
+				_tiles[_lastSelected.x / 50][_lastSelected.y / 50].setTexture(_textTile);
+			if (x < 19 && y < 19 && map.get_occ_case(x, y) == EMPTY )
+			{
+				if (_playerTurn)
+					_tiles[x][y].setTexture(_textSelectWhite);
+				else
+					_tiles[x][y].setTexture(_textSelectBlack);
+                _lastSelected = sf::Vector2f(x * 50, y * 50);
+			}
+		delete t;
 	}
 	return (0);
 }
 
-void setPlayer(unsigned p, IPlayer &player)
+void Game::setPlayer(unsigned p, IPlayer *player)
 {
 	if (p >= 2)
 		throw (std::runtime_error("Trying to set a player which is not the first or second"));

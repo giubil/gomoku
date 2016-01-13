@@ -1,6 +1,9 @@
 #ifndef _REFEREE_HH
 # define _REFEREE_HH
 
+#include <vector>
+#include <SFML/Graphics.hpp>
+
 #include "map.hh"
 
 enum player_won
@@ -13,6 +16,7 @@ enum player_won
 class Referee
 {
 private:
+    std::vector<sf::Vector2i> _to_clean;
 	Map &_map;
     player_won _result;
 	unsigned _captured[2];
@@ -25,6 +29,7 @@ public:
 	void calc();
 	void set_disallowed() const;
     player_won get_winner() const;
+    std::vector<sf::Vector2i> &get_to_clean();
 };
 
 #endif

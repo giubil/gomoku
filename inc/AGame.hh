@@ -10,8 +10,6 @@
 
 class AGame {
 protected:
-    sf::Event _event;
-
     sf::Texture _textTile;
     sf::Texture _textBlack;
     sf::Texture _textWhite;
@@ -20,8 +18,8 @@ protected:
 
     std::vector<std::vector<sf::Sprite>> _tiles;
 
-    bool playerTurn = true;
-    sf::Vector2f lastSelected;
+    bool _playerTurn = true;
+    sf::Vector2f _lastSelected;
 
 public:
     AGame();
