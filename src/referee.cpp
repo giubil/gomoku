@@ -11,26 +11,34 @@ void Referee::feed_map(Map &map)
 bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2] ,unsigned int x, unsigned int y) const
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
-    unsigned int buff_x, buff_y;
+    unsigned int buff_x, buff_y, k;
 
     for (int i = 0; i < 8; ++i)
     {
         if (i % 4 != direction % 4)
         {
             for (int j = 0; j < 2; ++j)
-                for (int k = 0; k < 4; ++k)
+                for (k = 0; k < 4; ++k)
                 {
                     buff_x = x + (tab_buff[i][0] * (j == 0 ? pattern_tab[k][0] : pattern_tab_inv[k][0]));
-                    buff_y = y + (tab_buff[i][1] * (j == 0 ? pattern_tab[k][1] : pattern_tab_inv[k][0]));
+                    buff_y = y + (tab_buff[i][1] * (j == 0 ? pattern_tab[k][1] : pattern_tab_inv[k][1]));
                     if (buff_x >= Map::Size || buff_y >= Map::Size)
                         break;
                     if ((j == 0 ? pattern_tab[k][1] :  pattern_tab_inv[k][1]) != _map.get_occ_case(buff_x, buff_y))
+					{
+						std::cout << "I am breaking with k = " << k << " and i = " << i << " and direction is " << direction << std::endl;
                         break;
+					}
                     else if (k == 3)
+					{
+						std::cout << "It's breakable" << std::endl;
                         return (true);
+					}
                 }
         }
     }
+	std::cout << "k " << k << std::endl;
+	std::cout << "It's not breakable" << std::endl;
     return (false);
 }
 
@@ -38,6 +46,8 @@ player_won Referee::five_in_a_row() const
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned int buff_x, buff_y, buff_val;
+	bool is_breakable;
+	size_t size_five, j;
 
     for (unsigned int x = 0; x < Map::Size; ++x)
         for (unsigned int y = 0; y < Map::Size; ++y)
@@ -48,20 +58,38 @@ player_won Referee::five_in_a_row() const
                 int pattern_tab[][2] = {{-1, case_type::EMPTY}, {0, static_cast<int>(buff_val)}, {1, static_cast<int>(buff_val)}, {2, (buff_val == case_type::WHITE ? case_type::BLACK : case_type::WHITE)}};
                 int pattern_tab_inv[][2] = {{-2, case_type::EMPTY}, {-1, static_cast<int>(buff_val)}, {0, static_cast<int>(buff_val)}, {1, (buff_val == case_type::WHITE ? case_type::BLACK : case_type::WHITE)}};
                 for (size_t i = 0; i < 8; ++i)
-                    for (size_t j = 0; j < 5; j++)
+				{
+					size_five = 0;
+                    for (j = 0; j < 5; j++)
                     {
+						size_five++;
                         buff_x = x + (tab_buff[i][0] * j);
                         buff_y = y + (tab_buff[i][1] * j);
                         if (!(buff_x >= Map::Size || buff_y >= Map::Size))
                         {
                             if (buff_val != _map.get_occ_case(buff_x, buff_y))
-                                break;
-                            if (find_pattern(i , pattern_tab, pattern_tab_inv, buff_x, buff_y))
-                                return (player_won::NONE);
-                            else if (j == 4)
-                                return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
+                        		break;
+							if (find_pattern(i, pattern_tab, pattern_tab_inv, buff_x, buff_y))
+								throw(std::string());
                         }
                     }
+					if (j == 5)
+					{
+						is_breakable = false;
+						for (j = 0; j < 5; j++)
+						{
+							buff_x = x + (tab_buff[i][0] * j);
+	                        buff_y = y + (tab_buff[i][1] * j);
+							if (find_pattern(i, pattern_tab, pattern_tab_inv, buff_x, buff_y))
+								is_breakable = true;
+						}
+						if (!is_breakable)
+						{
+							return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
+						}
+
+					}
+				}
             }
         }
     return (player_won::NONE);
