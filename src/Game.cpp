@@ -35,8 +35,8 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 	bool done = false;
 		t = _players[p]->play(map, ref, window);
 		if (t == nullptr)
-			throw std::runtime_error("player failed to return a valid position");
-		x = std::get<0>(*t);
+            return (1);
+        x = std::get<0>(*t);
 		y = std::get<1>(*t);
 		if (std::get<2>(*t))
 		{

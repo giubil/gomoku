@@ -14,8 +14,8 @@ CXXFLAGS	+= -Wall -Wextra -W -std=c++14
 LDFLAGS_GRAPHIC	= -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 SRC_PATH	= src
-SRC				= main.cpp \
-					Map.cpp \
+SRC				=   main.cpp \
+                    Map.cpp \
 					Referee.cpp \
 					Menu.cpp \
 					AGame.cpp \
@@ -26,7 +26,7 @@ OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
 
 INC_PATH	= inc
-INC		= Map.hh \
+INC         =   Map.hh \
 				Referee.hh \
 				AGame.hh \
 				Game.hh \
