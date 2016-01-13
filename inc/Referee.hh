@@ -1,10 +1,10 @@
-#ifndef _REFEREE_HH
-# define _REFEREE_HH
+#ifndef REFEREE_HH_
+# define REFEREE_HH_
 
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-#include "map.hh"
+#include "Map.hh"
 
 enum player_won
 {

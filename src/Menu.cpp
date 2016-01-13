@@ -1,5 +1,5 @@
-#include "menu.hh"
-#include "game.hh"
+#include "Menu.hh"
+#include "Game.hh"
 
 #include "Player.hh"
 

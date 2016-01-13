@@ -1,6 +1,6 @@
-#include "map.hh"
-#include "referee.hh"
-#include "menu.hh"
+#include "Map.hh"
+#include "Referee.hh"
+#include "Menu.hh"
 #include <cstdlib>
 
 int main()

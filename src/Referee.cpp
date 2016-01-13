@@ -1,4 +1,4 @@
-#include "referee.hh"
+#include "Referee.hh"
 
 Referee::Referee(Map &map) : _map(map), _result(player_won::NONE) {
 }
@@ -168,4 +168,3 @@ std::vector<sf::Vector2i> &Referee::get_to_clean()
 {
     return _to_clean;
 }
-
