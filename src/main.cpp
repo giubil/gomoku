@@ -1,6 +1,6 @@
-#include "map.hh"
-#include "referee.hh"
-#include "menu.hh"
+#include "Map.hh"
+#include "Referee.hh"
+#include "Menu.hh"
 #include <cstdlib>
 
 int main()
@@ -9,7 +9,7 @@ int main()
 	Referee referee(yolo);
 	Menu menu;
 
-	menu.setWindows(950,950);
+	menu.setWindows(1150,950);
 	menu.menuLoop(yolo, referee);
     return (0);
 }

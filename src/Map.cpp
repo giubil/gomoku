@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <sstream>
-#include "map.hh"
+#include "Map.hh"
 
 Map::Map()
 {

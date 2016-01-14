@@ -1,4 +1,4 @@
-#include "referee.hh"
+#include "Referee.hh"
 
 Referee::Referee(Map &map) : _map(map), _result(player_won::NONE) {
 }
@@ -149,6 +149,7 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
 	unsigned buff_x, buff_y;
 	case_type color = _map.get_occ_case(x, y);
 
+    _to_clean.clear();
 	if (color == EMPTY)
 		return;
 	for (size_t i = 0; i < 8; i++)
@@ -158,14 +159,16 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
 			buff_x = x + (tab_buff[i][0] * j);
 			buff_y = y + (tab_buff[i][1] * j);
 			case_type buff = _map.get_occ_case(buff_x, buff_y);
-			if ((tab_patern[j] == 2 && (buff == EMPTY || buff == color))
-			    || (tab_patern[j] == 1 && (buff != color)))
+			if ((tab_patern[j - 1] == 2 && (buff == EMPTY || buff == color))
+			    || (tab_patern[j - 1] == 1 && (buff != color)))
 				break;
 			else if (j == 3)
 			{
-				_map.set_occ_case(x + (tab_buff[i][0]), y + (tab_buff[i][1]), EMPTY);
-				_map.set_occ_case(x + (tab_buff[i][0] * 2), y + (tab_buff[i][1] * 2), EMPTY);
-				_captured[color - 1]++;
+                _to_clean.push_back(sf::Vector2i(x + (tab_buff[i][0]), y + (tab_buff[i][1])));
+				_map.set_occ_case(_to_clean.back().x, _to_clean.back().y, EMPTY);
+                _to_clean.push_back(sf::Vector2i(x + (tab_buff[i][0] * 2), y + (tab_buff[i][1] * 2)));
+                _map.set_occ_case(_to_clean.back().x, _to_clean.back().y, EMPTY);
+                _captured[color - 1]++;
 			}
 		}
 	}
@@ -180,4 +183,9 @@ void Referee::calc()
 player_won Referee::get_winner() const
 {
     return (_result);
+}
+
+std::vector<sf::Vector2i> &Referee::get_to_clean()
+{
+    return _to_clean;
 }
