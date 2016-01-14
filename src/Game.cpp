@@ -25,7 +25,9 @@ int Game::mainLoop(Map &map, Referee &ref, sf::RenderWindow &window)
 		std::cout << "White player won !" << std::endl;
 	else if (ref.get_winner() == BLACK_WON)
 		std::cout << "Black player won !" << std::endl;
-	return (0);
+    else
+        std::cout << "nobody won !" << std::endl;
+    return (0);
 }
 
 int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)

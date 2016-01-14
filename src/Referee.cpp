@@ -129,6 +129,7 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
 	unsigned buff_x, buff_y;
 	case_type color = _map.get_occ_case(x, y);
 
+    _to_clean.clear();
 	if (color == EMPTY)
 		return;
 	for (size_t i = 0; i < 8; i++)
@@ -164,7 +165,7 @@ player_won Referee::get_winner() const
     return (_result);
 }
 
-std::vector<sf::Vector2i> &Referee::get_to_clean()
+std::vector<sf::Vector2i> &Referee::get_to_clean() const
 {
     return _to_clean;
 }
