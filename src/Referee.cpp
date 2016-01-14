@@ -158,6 +158,8 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
 		{
 			buff_x = x + (tab_buff[i][0] * j);
 			buff_y = y + (tab_buff[i][1] * j);
+			if (buff_x >= Map::Size || buff_y >= Map::Size)
+				break;
 			case_type buff = _map.get_occ_case(buff_x, buff_y);
 			if ((tab_patern[j - 1] == 2 && (buff == EMPTY || buff == color))
 			    || (tab_patern[j - 1] == 1 && (buff != color)))
