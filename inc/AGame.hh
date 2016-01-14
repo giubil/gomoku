@@ -16,10 +16,21 @@ protected:
     sf::Texture _textSelectWhite;
     sf::Texture _textSelectBlack;
 
+    sf::Font _font;
+
+    sf::Text _textPlayer;
+    sf::Text _textTurnPlayer;
+    sf::Text _textNbCapturedPlayer1;
+    sf::Text _textNbCapturedPlayer2;
+    sf::Text _textCapturedPlayer1;
+    sf::Text _textCapturedPlayer2;
+
     std::vector<std::vector<sf::Sprite>> _tiles;
 
     bool _playerTurn = true;
     sf::Vector2f _lastSelected;
+    int _nbCaptured1 = 0;
+    int _nbCaptured2 = 0;
 
 public:
     AGame();

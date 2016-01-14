@@ -16,6 +16,12 @@ int Game::mainLoop(Map &map, Referee &ref, sf::RenderWindow &window)
 			{
 				window.draw(_tiles[i][j]);
 			}
+			window.draw(_textPlayer);
+			window.draw(_textTurnPlayer);
+			window.draw(_textNbCapturedPlayer1);
+			window.draw(_textNbCapturedPlayer2);
+			window.draw(_textCapturedPlayer1);
+			window.draw(_textCapturedPlayer2);
 		}
 		window.display();
 		if (ref.get_winner() != NONE)
@@ -34,7 +40,9 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 {
 	unsigned p = _playerTurn ? 0 : 1, x, y;
 	std::tuple<int, int, bool> const *t;
+	std::vector<sf::Vector2i> itemsToClear;
 	bool done = false;
+
 		t = _players[p]->play(map, ref, window);
 		if (t == nullptr)
             return (1);
@@ -54,7 +62,22 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 					_tiles[x][y].setTexture(_playerTurn ? _textWhite : _textBlack);
 					ref.remove_capture_pieces(x, y);
 					ref.calc();
+					itemsToClear = ref.get_to_clean();
+					for (unsigned int i = 0; i < itemsToClear.size(); i++)
+					{
+						_tiles[itemsToClear[i].x][itemsToClear[i].y].setTexture(_textTile);
+						if (_playerTurn)
+							_nbCaptured1++;
+						else
+							_nbCaptured2++;
+					}
                     _playerTurn =! _playerTurn;
+					_textNbCapturedPlayer1.setString(std::to_string(_nbCaptured1));
+					_textNbCapturedPlayer2.setString(std::to_string(_nbCaptured2));
+					if (_playerTurn)
+						_textTurnPlayer.setString("Player White");
+					else
+						_textTurnPlayer.setString("Player Black");
 					done = true;
 				}
 			} catch (std::exception) {
