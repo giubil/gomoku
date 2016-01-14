@@ -2,6 +2,7 @@
 #include "Game.hh"
 
 #include "Player.hh"
+#include "AI.hh"
 
 Menu::Menu()
 {
@@ -38,7 +39,7 @@ int Menu::menuLoop(Map &map, Referee &ref)
 
                     // temp
                     _game->setPlayer(0, new Player());
-                    _game->setPlayer(1, new Player());
+                    _game->setPlayer(1, new AI());
                     // !temp
                   }
                   catch (std::runtime_error e)
