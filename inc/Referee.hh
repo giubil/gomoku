@@ -29,7 +29,7 @@ public:
 	void calc();
 	void set_disallowed() const;
     player_won get_winner() const;
-    std::vector<sf::Vector2i> &get_to_clean() const;
+    std::vector<sf::Vector2i> &get_to_clean();
 };
 
 #endif

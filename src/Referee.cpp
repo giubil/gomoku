@@ -165,7 +165,7 @@ player_won Referee::get_winner() const
     return (_result);
 }
 
-std::vector<sf::Vector2i> &Referee::get_to_clean() const
+std::vector<sf::Vector2i> &Referee::get_to_clean()
 {
     return _to_clean;
 }
