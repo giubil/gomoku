@@ -11,34 +11,26 @@ void Referee::feed_map(Map &map)
 bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2] ,unsigned int x, unsigned int y) const
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
-    unsigned int buff_x, buff_y, k;
+    unsigned int buff_x, buff_y;
 
     for (int i = 0; i < 8; ++i)
     {
         if (i % 4 != direction % 4)
         {
             for (int j = 0; j < 2; ++j)
-                for (k = 0; k < 4; ++k)
+                for (int k = 0; k < 4; ++k)
                 {
                     buff_x = x + (tab_buff[i][0] * (j == 0 ? pattern_tab[k][0] : pattern_tab_inv[k][0]));
-                    buff_y = y + (tab_buff[i][1] * (j == 0 ? pattern_tab[k][1] : pattern_tab_inv[k][1]));
+                    buff_y = y + (tab_buff[i][1] * (j == 0 ? pattern_tab[k][0] : pattern_tab_inv[k][0]));
                     if (buff_x >= Map::Size || buff_y >= Map::Size)
                         break;
                     if ((j == 0 ? pattern_tab[k][1] :  pattern_tab_inv[k][1]) != _map.get_occ_case(buff_x, buff_y))
-					{
-						std::cout << "I am breaking with k = " << k << " and i = " << i << " and direction is " << direction << std::endl;
                         break;
-					}
                     else if (k == 3)
-					{
-						std::cout << "It's breakable" << std::endl;
                         return (true);
-					}
                 }
         }
     }
-	std::cout << "k " << k << std::endl;
-	std::cout << "It's not breakable" << std::endl;
     return (false);
 }
 
@@ -69,9 +61,9 @@ player_won Referee::five_in_a_row() const
                         {
                             if (buff_val != _map.get_occ_case(buff_x, buff_y))
                         		break;
-							if (find_pattern(i, pattern_tab, pattern_tab_inv, buff_x, buff_y))
-								throw(std::string());
                         }
+						else
+							break;
                     }
 					if (j == 5)
 					{
