@@ -1,6 +1,6 @@
 #include "AI.hh"
 
-std::tuple<int, int, bool> const * AI::play(Map &map, Referee &ref, sf::RenderWindow &window) const
+std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::RenderWindow &window) const
 {
     static_cast<void>(map);
     static_cast<void>(ref);

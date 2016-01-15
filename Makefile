@@ -20,6 +20,7 @@ SRC				=   main.cpp \
 					Menu.cpp \
 					AGame.cpp \
 					Game.cpp \
+                    APlayer.cpp \
 					Player.cpp \
 					AI.cpp
 
@@ -32,7 +33,7 @@ INC         =   Map.hh \
 				AGame.hh \
 				Game.hh \
 				Menu.hh \
-				IPlayer.hh \
+				APlayer.hh \
 				Player.hh \
 				AI.hh
 

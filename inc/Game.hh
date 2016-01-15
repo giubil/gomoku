@@ -2,16 +2,16 @@
 #define GAME_HH_
 
 #include "AGame.hh"
-#include "IPlayer.hh"
+#include "APlayer.hh"
 
 class Game : public AGame {
 protected:
-    IPlayer *_players[2];
+    APlayer *_players[2];
 public:
     void setWindows(int width, int height);
     int mainLoop(Map&, Referee&, sf::RenderWindow &);
     int eventsHandling(Map&, Referee&, sf::RenderWindow &);
-    void setPlayer(unsigned, IPlayer *);
+    void setPlayer(unsigned, APlayer *);
 };
 
 #endif /* !GAME_HH_ */

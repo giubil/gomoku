@@ -1,6 +1,6 @@
 #include "Player.hh"
 
-std::tuple<int, int, bool> const * Player::play(Map &map, Referee &ref, sf::RenderWindow &window) const
+std::tuple<int, int, bool> const * Player::play(Map const &map, Referee &ref, sf::RenderWindow &window) const
 {
     std::tuple<int, int, bool> *tuple = nullptr;
     static_cast<void>(map);

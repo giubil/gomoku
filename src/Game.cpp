@@ -103,9 +103,12 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
     return (0);
 }
 
-void Game::setPlayer(unsigned p, IPlayer *player)
+void Game::setPlayer(unsigned p, APlayer *player)
 {
     if (p >= 2)
-        throw (std::runtime_error("Trying to set a player which is not the first or second"));
+        throw (std::invalid_argument("Trying to set a player which is not the first or second"));
+    if (!player)
+        throw (std::invalid_argument("Player must be different than nullptr"));
+    player->set_color(APlayer::BLACK);
     _players[p] = player;
 }
