@@ -15,6 +15,7 @@ int Game::mainLoop(sf::RenderWindow &window)
 	{
 		this->eventsHandling(window);
 		window.clear();
+        window.draw(_BackGround);
 		for (int i = 0; i < 19; i++)
 		{
 			_tiles.push_back(std::vector<sf::Sprite>());

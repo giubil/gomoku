@@ -7,18 +7,21 @@ AGame::AGame()
 	int x = 0;
 	int y = 0;
 	sf::Sprite mem;
-	if (!_textTile.loadFromFile("./ressources/Case.png"))
+	if (!_textBackGround.loadFromFile("./ressources/BackGround.png"))
+		throw (std::runtime_error("Failed to load Background texture!"));
+	if (!_textTile.loadFromFile("./ressources/Casev2.png"))
 		throw (std::runtime_error("Failed to load case texture!"));
-	if (!_textBlack.loadFromFile("./ressources/CaseBlack.png"))
+	if (!_textBlack.loadFromFile("./ressources/CaseBlackv2.png"))
 		throw (std::runtime_error("Failed to load blacktile texture!"));
-	if (!_textWhite.loadFromFile("./ressources/CaseWhite.png"))
+		if (!_textWhite.loadFromFile("./ressources/CaseWhitev2.png"))
 		throw (std::runtime_error("Failed to load whitetile texture!"));
-	if (!_textSelectWhite.loadFromFile("./ressources/CaseSelectorWhite.png"))
+	if (!_textSelectWhite.loadFromFile("./ressources/CaseSelectorWhitev2.png"))
 		throw (std::runtime_error("Failed to load whiteselector texture"));
-	if (!_textSelectBlack.loadFromFile("./ressources/CaseSelectorBlack.png"))
+		if (!_textSelectBlack.loadFromFile("./ressources/CaseSelectorBlackv2.png"))
 		throw (std::runtime_error("Failed to load blackselector texture"));
 	if (!_font.loadFromFile("./ressources/OpenSans-Regular.ttf"))
 		throw (std::runtime_error("Failed to load font"));
+	_BackGround.setTexture(_textBackGround);
 	mem.setPosition(x, y);
 	mem.setTexture(_textTile);
 	for (int i = 0; i < 19; i++)
