@@ -34,8 +34,8 @@ protected:
 
 public:
     AGame();
-    virtual int mainLoop(Map&, Referee&, sf::RenderWindow &) = 0;
-    virtual int eventsHandling(Map&, Referee&, sf::RenderWindow &) = 0;
+    virtual int mainLoop(sf::RenderWindow &) = 0;
+    virtual int eventsHandling(sf::RenderWindow &) = 0;
 };
 
 #endif /* !AGame_HH_ */

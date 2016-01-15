@@ -5,11 +5,9 @@
 
 int main()
 {
-	Map yolo;
-	Referee referee(yolo);
 	Menu menu;
 
 	menu.setWindows(1150,950);
-	menu.menuLoop(yolo, referee);
+	menu.menuLoop();
     return (0);
 }

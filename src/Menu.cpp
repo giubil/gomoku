@@ -19,7 +19,7 @@ int Menu::setWindows(int width, int height)
     return (0);
 }
 
-int Menu::menuLoop(Map &map, Referee &ref)
+int Menu::menuLoop()
 {
     while (_window.isOpen() && closeMenu == false)
     {
@@ -59,6 +59,6 @@ int Menu::menuLoop(Map &map, Referee &ref)
         _window.display();
     }
     if (_game != nullptr)
-        _game->mainLoop(map, ref, _window);
+        _game->mainLoop(_window);
     return (0);
 }

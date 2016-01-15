@@ -1,13 +1,19 @@
 #include "Game.hh"
 
-int Game::mainLoop(Map &map, Referee &ref, sf::RenderWindow &window)
+Game::Game()
+: _map(*new Map()), _ref(*new Referee(_map))
+{
+    
+}
+
+int Game::mainLoop(sf::RenderWindow &window)
 {
     if (_players[0] == nullptr || _players[1] == nullptr)
         throw std::runtime_error("player missing");
     _playerTurn = true;
     while (window.isOpen())
 	{
-		eventsHandling(map, ref, window);
+		this->eventsHandling(window);
 		window.clear();
 		for (int i = 0; i < 19; i++)
 		{
@@ -24,19 +30,19 @@ int Game::mainLoop(Map &map, Referee &ref, sf::RenderWindow &window)
 			window.draw(_textCapturedPlayer2);
 		}
 		window.display();
-		if (ref.get_winner() != NONE)
+		if (_ref.get_winner() != NONE)
 			window.close();
 	}
-	if (ref.get_winner() == WHITE_WON)
+	if (_ref.get_winner() == WHITE_WON)
 		std::cout << "White player won !" << std::endl;
-	else if (ref.get_winner() == BLACK_WON)
+	else if (_ref.get_winner() == BLACK_WON)
 		std::cout << "Black player won !" << std::endl;
     else
         std::cout << "nobody won !" << std::endl;
     return (0);
 }
 
-int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
+int Game::eventsHandling(sf::RenderWindow &window)
 {
 	unsigned p = _playerTurn ? 0 : 1, x, y;
 	std::tuple<int, int, bool> const *t;
@@ -44,7 +50,7 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 	bool done = false;
     while (!done)
     {
-		t = _players[p]->play(map, ref, window);
+		t = _players[p]->play(_map, _ref, window);
 		if (t == nullptr)
             return (1);
         x = std::get<0>(*t);
@@ -52,18 +58,18 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 		if (std::get<2>(*t))
 		{
 			try {
-                if (map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_WHITE)
-                    || map.get_occ_case(x, y) != EMPTY)
+                if (_map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_WHITE)
+                    || _map.get_occ_case(x, y) != EMPTY)
 				{
 					done = false;
 				}
 				else
 				{
-					map.set_occ_case(x, y, _playerTurn ? WHITE : BLACK);
+					_map.set_occ_case(x, y, _playerTurn ? WHITE : BLACK);
 					_tiles[x][y].setTexture(_playerTurn ? _textWhite : _textBlack);
-					ref.remove_capture_pieces(x, y);
-					ref.calc();
-					itemsToClear = ref.get_to_clean();
+					_ref.remove_capture_pieces(x, y);
+					_ref.calc();
+					itemsToClear = _ref.get_to_clean();
 					for (unsigned int i = 0; i < itemsToClear.size(); i++)
 					{
 						_tiles[itemsToClear[i].x][itemsToClear[i].y].setTexture(_textTile);
@@ -87,9 +93,9 @@ int Game::eventsHandling(Map &map, Referee &ref, sf::RenderWindow &window)
 		}
 		else
 		{
-			if (map.get_occ_case(_lastSelected.x / 50, _lastSelected.y / 50) == EMPTY)
+			if (_map.get_occ_case(_lastSelected.x / 50, _lastSelected.y / 50) == EMPTY)
 				_tiles[_lastSelected.x / 50][_lastSelected.y / 50].setTexture(_textTile);
-			if (x < 19 && y < 19 && map.get_occ_case(x, y) == EMPTY )
+			if (x < 19 && y < 19 && _map.get_occ_case(x, y) == EMPTY )
 			{
 				if (_playerTurn)
 					_tiles[x][y].setTexture(_textSelectWhite);
@@ -110,5 +116,6 @@ void Game::setPlayer(unsigned p, APlayer *player)
     if (!player)
         throw (std::invalid_argument("Player must be different than nullptr"));
     player->set_color(APlayer::BLACK);
+    player->set_map(&_map);
     _players[p] = player;
 }

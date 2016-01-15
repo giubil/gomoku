@@ -16,7 +16,7 @@ public:
     Menu();
     ~Menu();
     int setWindows(int width, int height);
-    int menuLoop(Map &, Referee &);
+    int menuLoop();
 };
 
 #endif /* !MENU_HH_ */

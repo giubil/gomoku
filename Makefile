@@ -7,6 +7,8 @@ MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
 CXXFLAGS	+= -Wall -Wextra -W -std=c++14
+LDFLAGS     =  -pthread
+
 # LDFLAGS		= -ldl -pthread
 # LDFLAGS		+= -L./lib
 # LDFLAGS		+= -Wl,--rpath=./lib
