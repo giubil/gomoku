@@ -184,7 +184,12 @@ void Referee::calc()
 
 player_won Referee::get_winner() const
 {
-    return (_result);
+    if (_captured[0] >= 5)
+        return WHITE_WON;
+    else if (_captured[1] >= 5)
+        return BLACK_WON;
+    else
+        return (_result);
 }
 
 std::vector<sf::Vector2i> &Referee::get_to_clean()
