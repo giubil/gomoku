@@ -68,4 +68,14 @@ AGame::AGame()
 	_textNbCapturedPlayer1.setPosition(960, 100);
 	_textCapturedPlayer2.setPosition(960, 120);
 	_textNbCapturedPlayer2.setPosition(960, 140);
+
+	_textWin.setFont(_font);
+	_textWin.setString("Player White Win");
+	_textWin.setColor(sf::Color::White);
+	_textWin.setPosition(475, 475);
+
+	_rectWin.setPosition(475, 475);
+	_rectWin.setFillColor(sf::Color(0, 0, 0, 90));
+
+	_Win = false;
 }

@@ -30,16 +30,15 @@ int Game::mainLoop(sf::RenderWindow &window)
 			window.draw(_textCapturedPlayer1);
 			window.draw(_textCapturedPlayer2);
 		}
+        if (_Win)
+        {
+            window.draw(_rectWin);
+            window.draw(_textWin);
+            if (clock.getElapsedTime().asSeconds() > 3)
+                window.close();
+        }
 		window.display();
-		if (_ref.get_winner() != NONE)
-			window.close();
 	}
-	if (_ref.get_winner() == WHITE_WON)
-		std::cout << "White player won !" << std::endl;
-	else if (_ref.get_winner() == BLACK_WON)
-		std::cout << "Black player won !" << std::endl;
-    else
-        std::cout << "nobody won !" << std::endl;
     return (0);
 }
 
@@ -91,6 +90,20 @@ int Game::eventsHandling(sf::RenderWindow &window)
 					else
 						_textTurnPlayer.setString("Player Black");
 					done = true;
+                    if (ref.get_winner() != NONE)
+                    {
+                        _Win = true;
+                        if (ref.get_winner() == WHITE_WON)
+                            _textWin.setString("White player won !");
+                        else if (ref.get_winner() == BLACK_WON)
+                            _textWin.setString("Black player won !");
+                        else
+                            _textWin.setString("nobody won !");
+                        _textWin.setOrigin(_textWin.getLocalBounds().width/2.0f,_textWin.getLocalBounds().height/2.0f);
+                        _rectWin.setSize(sf::Vector2f(_textWin.getLocalBounds().width + 20, _textWin.getLocalBounds().height + 20));
+                        _rectWin.setOrigin(_rectWin.getLocalBounds().width/2.0f,_rectWin.getLocalBounds().height/2.0f);
+                        clock.restart();
+                    }
 				}
 			} catch (std::exception) {
 				done = false;
