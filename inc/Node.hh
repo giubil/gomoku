@@ -10,6 +10,7 @@ class Node
 {
     Node                            *_parent;
     std::list<Node *>               _child_list;
+    std::list<std::tuple<int, int>> _child_moves;
     int                             _wins;
     int                             _visits;
     State                           *_state;
@@ -26,6 +27,7 @@ public:
     const std::list<Node *> &get_childs() const;
     std::tuple<int, int> get_move() const;
     Node *get_most_visited();
+    void print_node() const;
 };
 
 #endif /* !NODE_HH_ */

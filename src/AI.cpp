@@ -17,9 +17,10 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     State *buff_state;
     std::tuple<int, int> buff_move;
 
-    for (int i = 0; i < 50; ++i)
+    for (int i = 0; i < 1000; ++i)
     {
-        std::cout << "i = " << i << std::endl;
+        if (i % 10 == 0)
+            std::cout << "i = " << i << std::endl;
         buff_node = &rootnode;
         buff_state = new State(rootstate);
 
@@ -39,12 +40,23 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
         }
 
         //Rolling out
+
+        int j = 0;
+
         while (!buff_state->get_moves().empty())
+        {
+            ++j;
             buff_state->do_move(buff_state->get_random_move());
+        }
+
+        if (std::rand() % 100 == 0)
+            buff_state->print_map();
 
         //Backpropagating
         while (buff_node != nullptr)
         {
+            if (buff_node->get_state()->get_results() != player_won::NONE)
+                std::cout << buff_node->get_state()->get_results() << " won" << std::endl;
             if ((buff_node->get_state()->get_results() == player_won::BLACK_WON
                 && buff_node->get_state()->get_turn() == APlayer::BLACK)
                 || (buff_node->get_state()->get_results() == player_won::WHITE_WON
@@ -55,6 +67,8 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
             buff_node = buff_node->get_parent();
         }
     }
+    for (auto it = rootnode.get_childs().begin(); it != rootnode.get_childs().end(); ++it)
+        (*it)->print_node();
     buff_move = rootnode.get_most_visited()->get_move();
     return (new std::tuple<int, int, bool>(std::get<0>(buff_move), std::get<1>(buff_move), true));
 }

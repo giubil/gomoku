@@ -1,6 +1,9 @@
 #include "Referee.hh"
 
-Referee::Referee(Map &map) : _map(map), _result(player_won::NONE) {
+Referee::Referee(Map &map) : _map(map), _result(player_won::NONE)
+{
+	_captured[0] = 0;
+	_captured[1] = 0;
 }
 
 void Referee::feed_map(Map &map)

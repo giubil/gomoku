@@ -8,6 +8,7 @@ Node *Node::create_children(std::tuple<int, int> move, State *state)
 {
     Node    *child_node = new Node(state, this, new std::tuple<int, int>(move));
 
+    _state->push_tried_move(move);
     _child_list.push_back(child_node);
     return (child_node);
 }
@@ -37,7 +38,10 @@ int     Node::get_wins() const { return (_wins);}
 Node    *Node::get_parent() const { return (_parent);}
 State   *Node::get_state() const { return (_state);}
 const std::list<Node *> &Node::get_childs() const { return (_child_list);}
-std::tuple<int, int> Node::get_move() const { return (*_move);}
+std::tuple<int, int> Node::get_move() const
+{
+    return (*_move);
+}
 
 Node *Node::get_most_visited()
 {
@@ -45,4 +49,10 @@ Node *Node::get_most_visited()
         return (a->get_visits() > b->get_visits() ? a : b);
     });
     return (_child_list.front());
+}
+
+void Node::print_node() const
+{
+    std::cout   << "Hello I am a node, my move is x = " << std::get<0>(*_move) << " y = " << std::get<1>(*_move)
+                << " I got visited " << _visits << " times and I got " << _wins << std::endl;
 }
