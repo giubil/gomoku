@@ -10,6 +10,8 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     static_cast<void>(ref);
     static_cast<void>(window);
 
+    std::srand(time(0));
+
     State rootstate = State(Map(map), this->_color , Referee(ref));
     Node rootnode = Node(&rootstate);
 
@@ -17,7 +19,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     State *buff_state;
     std::tuple<int, int> buff_move;
 
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 50; ++i)
     {
         std::cout << "i = " << i << std::endl;
         buff_node = &rootnode;
@@ -66,8 +68,8 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
             buff_node = buff_node->get_parent();
         }
     }
-    for (auto it = rootnode.get_childs().begin(); it != rootnode.get_childs().end(); ++it)
-        (*it)->print_node();
+    /*for (auto it = rootnode.get_childs().begin(); it != rootnode.get_childs().end(); ++it)
+        (*it)->print_node();*/
     buff_move = rootnode.get_most_visited()->get_move();
     return (new std::tuple<int, int, bool>(std::get<0>(buff_move), std::get<1>(buff_move), true));
 }

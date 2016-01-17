@@ -3,6 +3,7 @@
 #include <thread>
 #include <mutex>
 #include <SFML/Graphics.hpp>
+#include <ctime>
 #include "APlayer.hh"
 #include "State.hh"
 #include "Node.hh"

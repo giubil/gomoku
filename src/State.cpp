@@ -14,6 +14,7 @@ void State::update_moves()
 
     if (_ref.get_winner() != player_won::NONE)
     {
+        std::cout << "I won" << std::endl;
         _won = _ref.get_winner();
         _untried_moves = ret_moves;
         return ;
@@ -61,6 +62,7 @@ std::list<std::tuple<int, int>> State::get_moves()
 void State::do_move(std::tuple<int, int> move)
 {
     _map.set_occ_case(std::get<0>(move), std::get<1>(move), (_whose_turn == APlayer::WHITE ? case_type::WHITE : case_type::BLACK));
+    _ref.feed_map(_map);
     _ref.remove_capture_pieces(std::get<0>(move), std::get<1>(move));
     _ref.calc();
     _won = _ref.get_winner();
@@ -81,8 +83,10 @@ std::tuple<int, int> State::get_random_move()
     std::list<std::tuple<int, int>>::iterator it = buff_moves.begin();
 
     std::advance(it, std::rand() % buff_moves.size());
-
-    return (buff_moves.front());
+    _tried_moves.push_back(*it);
+    _untried_moves.remove(*it);
+    //update_moves();
+    return (*it);
 }
 
 void State::push_tried_move(std::tuple<int, int> move)
