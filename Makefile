@@ -6,7 +6,7 @@ RM		= rm -rf
 MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
-CXXFLAGS	+= -Wall -Wextra -W -std=c++14
+CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -g
 LDFLAGS     =  -pthread
 
 # LDFLAGS		= -ldl -pthread
@@ -24,7 +24,9 @@ SRC				=   main.cpp \
 					Game.cpp \
                     APlayer.cpp \
 					Player.cpp \
-					AI.cpp
+					AI.cpp \
+					Node.cpp \
+					State.cpp
 
 OBJ_PATH	= obj
 OBJ		= $(SRC:%.cpp=$(OBJ_PATH)/%.o)
@@ -37,7 +39,9 @@ INC         =   Map.hh \
 				Menu.hh \
 				APlayer.hh \
 				Player.hh \
-				AI.hh
+				AI.hh \
+				Node.hh \
+				State.hh
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 

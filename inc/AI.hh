@@ -3,6 +3,8 @@
 #include <thread>
 #include <SFML/Graphics.hpp>
 #include "APlayer.hh"
+#include "State.hh"
+#include "Node.hh"
 
 class AI : public APlayer {
     std::thread *_AI_helper;
