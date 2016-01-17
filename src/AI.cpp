@@ -10,7 +10,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     static_cast<void>(ref);
     static_cast<void>(window);
 
-    State rootstate = State(Map(map), APlayer::BLACK, Referee(ref));
+    State rootstate = State(Map(map), this->_color , Referee(ref));
     Node rootnode = Node(&rootstate);
 
     Node *buff_node;
