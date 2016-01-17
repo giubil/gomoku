@@ -17,8 +17,9 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     State *buff_state;
     std::tuple<int, int> buff_move;
 
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < 50; ++i)
     {
+        std::cout << "i = " << i << std::endl;
         buff_node = &rootnode;
         buff_state = new State(rootstate);
 

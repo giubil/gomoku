@@ -3,7 +3,7 @@
 Game::Game()
 : _map(*new Map()), _ref(*new Referee(_map))
 {
-    
+
 }
 
 int Game::mainLoop(sf::RenderWindow &window)
@@ -30,8 +30,8 @@ int Game::mainLoop(sf::RenderWindow &window)
 			window.draw(_textCapturedPlayer2);
 		}
 		window.display();
-		if (_ref.get_winner() != NONE)
-			window.close();
+/*		if (_ref.get_winner() != NONE)
+			window.close();*/
 	}
 	if (_ref.get_winner() == WHITE_WON)
 		std::cout << "White player won !" << std::endl;

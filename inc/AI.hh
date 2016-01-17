@@ -1,6 +1,7 @@
 #ifndef AI_HH_
 #define AI_HH_
 #include <thread>
+#include <mutex>
 #include <SFML/Graphics.hpp>
 #include "APlayer.hh"
 #include "State.hh"
