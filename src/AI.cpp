@@ -17,10 +17,9 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     State *buff_state;
     std::tuple<int, int> buff_move;
 
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < 100; ++i)
     {
-        if (i % 10 == 0)
-            std::cout << "i = " << i << std::endl;
+        std::cout << "i = " << i << std::endl;
         buff_node = &rootnode;
         buff_state = new State(rootstate);
 
@@ -49,7 +48,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
             buff_state->do_move(buff_state->get_random_move());
         }
 
-        if (std::rand() % 100 == 0)
+        if (std::rand() % 10 == 0)
             buff_state->print_map();
 
         //Backpropagating

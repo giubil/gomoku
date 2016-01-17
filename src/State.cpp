@@ -3,17 +3,20 @@
 State::State(Map map, APlayer::player_color whose_turn, Referee ref) : _map(map), _whose_turn(whose_turn), _ref(ref), _won(player_won::NONE)
 {
     _ref.feed_map(map);
+    update_moves();
 }
 
-std::list<std::tuple<int, int>> State::get_moves()
+void State::update_moves()
 {
     APlayer::player_color buff_player;
     std::list<std::tuple<int, int>> ret_moves;
 
+
     if (_ref.get_winner() != player_won::NONE)
     {
         _won = _ref.get_winner();
-        return (ret_moves);
+        _untried_moves = ret_moves;
+        return ;
     }
     for (size_t i = 0; i < Map::Size; ++i)
         for (size_t j = 0; j < Map::Size; ++j)
@@ -25,11 +28,34 @@ std::list<std::tuple<int, int>> State::get_moves()
                     || (buff_player == APlayer::BLACK && _map.get_ref_case(i, j) != DISALLOW_BLACK))
                     {
                         if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int>(i ,j)) != _tried_moves.end()))
-                            ret_moves.push_back(std::tuple<int, int>(i, j));
+                        {
+                            bool nearby_piece = false;
+                            for (int k = -1; k < 2; ++k)
+                                for (int l = -1; l < 2; ++l)
+                                {
+                                    int buff_x = i + k;
+                                    int buff_y = j + l;
+                                    try {
+                                        if (_map.get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(k == 0 && l == 0))
+                                        {
+                                            nearby_piece = true;
+                                            k = 2;
+                                            l = 2;
+                                        }
+                                    } catch (std::exception) {}
+                                }
+                            if (nearby_piece)
+                                ret_moves.push_back(std::tuple<int, int>(i, j));
+                        }
                     }
             }
         }
-    return (ret_moves);
+    _untried_moves = ret_moves;
+}
+
+std::list<std::tuple<int, int>> State::get_moves()
+{
+    return (_untried_moves);
 }
 
 void State::do_move(std::tuple<int, int> move)
@@ -40,6 +66,7 @@ void State::do_move(std::tuple<int, int> move)
     _won = _ref.get_winner();
     _whose_turn = _whose_turn == APlayer::player_color::WHITE ? APlayer::player_color::BLACK : APlayer::player_color::WHITE;
     _tried_moves = std::list<std::tuple<int, int>>();
+    update_moves();
 }
 
 player_won  State::get_results()
