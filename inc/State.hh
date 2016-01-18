@@ -10,15 +10,15 @@
 
 class State
 {
-    Map                             _map;
+    Map                             *_map;
+    Referee                         *_ref;
     APlayer::player_color           _whose_turn;
-    Referee                         _ref;
     player_won                      _won;
     std::list<std::tuple<int, int>> _tried_moves;
     std::list<std::tuple<int, int>> _untried_moves;
     void update_moves();
 public:
-    State(Map map, APlayer::player_color whose_turn, Referee ref);
+    State(Map *map, APlayer::player_color whose_turn, Referee *ref);
     std::list<std::tuple<int, int>> get_moves();
     void do_move(std::tuple<int, int> move);
     player_won  get_results();

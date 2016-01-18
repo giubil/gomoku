@@ -1,12 +1,12 @@
 #include "Referee.hh"
 
-Referee::Referee(Map &map) : _map(map), _result(player_won::NONE)
+Referee::Referee(Map *map) : _map(map), _result(player_won::NONE)
 {
 	_captured[0] = 0;
 	_captured[1] = 0;
 }
 
-void Referee::feed_map(Map &map)
+void Referee::feed_map(Map *map)
 {
 	_map = map;
 }
@@ -27,7 +27,7 @@ bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_t
                     buff_y = y + (tab_buff[i][1] * (j == 0 ? pattern_tab[k][0] : pattern_tab_inv[k][0]));
                     if (buff_x >= Map::Size || buff_y >= Map::Size)
                         break;
-                    if ((j == 0 ? pattern_tab[k][1] :  pattern_tab_inv[k][1]) != _map.get_occ_case(buff_x, buff_y))
+                    if ((j == 0 ? pattern_tab[k][1] :  pattern_tab_inv[k][1]) != _map->get_occ_case(buff_x, buff_y))
                         break;
                     else if (k == 3)
                         return (true);
@@ -47,7 +47,7 @@ player_won Referee::five_in_a_row() const
     for (unsigned int x = 0; x < Map::Size; ++x)
         for (unsigned int y = 0; y < Map::Size; ++y)
         {
-            buff_val = _map.get_occ_case(x, y);
+            buff_val = _map->get_occ_case(x, y);
             if (buff_val != case_type::EMPTY)
             {
                 int pattern_tab[][2] = {{-1, case_type::EMPTY}, {0, static_cast<int>(buff_val)}, {1, static_cast<int>(buff_val)}, {2, (buff_val == case_type::WHITE ? case_type::BLACK : case_type::WHITE)}};
@@ -62,7 +62,7 @@ player_won Referee::five_in_a_row() const
                         buff_y = y + (tab_buff[i][1] * j);
                         if (!(buff_x >= Map::Size || buff_y >= Map::Size))
                         {
-                            if (buff_val != _map.get_occ_case(buff_x, buff_y))
+                            if (buff_val != _map->get_occ_case(buff_x, buff_y))
                         		break;
                         }
 						else
@@ -119,7 +119,7 @@ void Referee::set_disallowed() const
 						buff_y = y + (tab_buff[k][1] * (j - 4));
 						if (buff_x >= Map::Size || buff_y >= Map::Size)
 							break;
-						buff_val = _map.get_occ_case(buff_x, buff_y);
+						buff_val = _map->get_occ_case(buff_x, buff_y);
 						if ((tab_patern[i][j] == 2 && buff_val == EMPTY)
 						    || (tab_patern[i][j] == 1 && buff_val != EMPTY))
 							break;
@@ -138,7 +138,7 @@ void Referee::set_disallowed() const
 								white++;
 						}
 					}
-					_map.set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
+					_map->set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
 				}
 			}
 		}
@@ -150,7 +150,7 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
 	int tab_patern[] = {2, 2, 1};
 	int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
 	unsigned buff_x, buff_y;
-	case_type color = _map.get_occ_case(x, y);
+	case_type color = _map->get_occ_case(x, y);
 
     _to_clean.clear();
 	if (color == EMPTY)
@@ -163,16 +163,16 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
 			buff_y = y + (tab_buff[i][1] * j);
 			if (buff_x >= Map::Size || buff_y >= Map::Size)
 				break;
-			case_type buff = _map.get_occ_case(buff_x, buff_y);
+			case_type buff = _map->get_occ_case(buff_x, buff_y);
 			if ((tab_patern[j - 1] == 2 && (buff == EMPTY || buff == color))
 			    || (tab_patern[j - 1] == 1 && (buff != color)))
 				break;
 			else if (j == 3)
 			{
                 _to_clean.push_back(sf::Vector2i(x + (tab_buff[i][0]), y + (tab_buff[i][1])));
-				_map.set_occ_case(_to_clean.back().x, _to_clean.back().y, EMPTY);
+				_map->set_occ_case(_to_clean.back().x, _to_clean.back().y, EMPTY);
                 _to_clean.push_back(sf::Vector2i(x + (tab_buff[i][0] * 2), y + (tab_buff[i][1] * 2)));
-                _map.set_occ_case(_to_clean.back().x, _to_clean.back().y, EMPTY);
+                _map->set_occ_case(_to_clean.back().x, _to_clean.back().y, EMPTY);
                 _captured[color - 1]++;
 			}
 		}

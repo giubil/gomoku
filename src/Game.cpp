@@ -1,7 +1,7 @@
 #include "Game.hh"
 
 Game::Game()
-: _map(*new Map()), _ref(*new Referee(_map))
+: _map(*new Map()), _ref(*new Referee(&_map))
 {
 
 }
@@ -30,8 +30,8 @@ int Game::mainLoop(sf::RenderWindow &window)
 			window.draw(_textCapturedPlayer2);
 		}
 		window.display();
-/*		if (_ref.get_winner() != NONE)
-			window.close();*/
+		if (_ref.get_winner() != NONE)
+			window.close();
 	}
 	if (_ref.get_winner() == WHITE_WON)
 		std::cout << "White player won !" << std::endl;
@@ -50,8 +50,10 @@ int Game::eventsHandling(sf::RenderWindow &window)
 	bool done = false;
     while (!done)
     {
-		t = _players[p]->play(_map, _ref, window);
-		if (t == nullptr)
+        Map *m = new Map(_map);
+		t = _players[p]->play(*m, _ref, window);
+        delete m;
+        if (t == nullptr)
             return (1);
         x = std::get<0>(*t);
 		y = std::get<1>(*t);
