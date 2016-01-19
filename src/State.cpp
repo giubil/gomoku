@@ -6,6 +6,12 @@ State::State(Map *map, APlayer::player_color whose_turn, Referee *ref) : _map(ma
     update_moves();
 }
 
+State::~State()
+{
+  delete _map;
+  delete _ref;
+}
+
 void State::update_moves()
 {
     APlayer::player_color buff_player;
