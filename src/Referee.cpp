@@ -11,6 +11,18 @@ void Referee::feed_map(Map *map)
 	_map = map;
 }
 
+Referee::Referee(const Referee &r)
+: _map(nullptr), _result(r._result)
+{
+    _captured[0] = r._captured[0];
+    _captured[1] = r._captured[1];
+}
+
+Referee &Referee::operator=(const Referee &r)
+{
+    return (*new Referee(r));
+}
+
 bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2] ,unsigned int x, unsigned int y) const
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};

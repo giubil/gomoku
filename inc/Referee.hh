@@ -24,7 +24,9 @@ private:
     bool find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2], unsigned int x, unsigned int y) const;
 public:
 	Referee(Map *map);
-	void feed_map(Map *map);
+    Referee(const Referee &);
+    Referee &operator=(const Referee &);
+    void feed_map(Map *map);
 	void remove_capture_pieces(unsigned x, unsigned y);
 	void calc();
 	void set_disallowed() const;

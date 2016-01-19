@@ -1,10 +1,24 @@
 #include "State.hh"
 
-State::State(Map *map, APlayer::player_color whose_turn, Referee *ref) : _map(map), _whose_turn(whose_turn), _ref(ref), _won(player_won::NONE)
+State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
+: _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE)
 {
     _ref->feed_map(map);
     update_moves();
 }
+
+State::State(const State &s)
+: _map(new Map(*s._map)), _ref(new Referee(*s._ref)), _whose_turn(s._whose_turn), _won(s._won)
+{
+    _ref->feed_map(_map);
+    update_moves();
+}
+
+State &State::operator=(const State &s)
+{
+    return (*new State(s));
+}
+
 
 State::~State()
 {

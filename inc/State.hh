@@ -19,6 +19,8 @@ class State
     void update_moves();
 public:
     State(Map *map, APlayer::player_color whose_turn, Referee *ref);
+    State(const State&);
+    State &operator=(const State&);
     ~State();
     std::list<std::tuple<int, int>> get_moves();
     void do_move(std::tuple<int, int> move);
