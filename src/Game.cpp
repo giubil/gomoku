@@ -51,6 +51,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
     while (!done)
     {
         Map *m = new Map(_map);
+        clock_t tStart = clock();
 		t = _players[p]->play(*m, _ref, window);
         delete m;
         if (t == nullptr)
@@ -59,6 +60,8 @@ int Game::eventsHandling(sf::RenderWindow &window)
 		y = std::get<1>(*t);
 		if (std::get<2>(*t))
 		{
+            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
 			try {
                 if (_map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_WHITE)
                     || _map.get_occ_case(x, y) != EMPTY)

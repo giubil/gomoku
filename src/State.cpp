@@ -54,16 +54,15 @@ void State::update_moves()
                             for (int k = -1; k < 2; ++k)
                                 for (int l = -1; l < 2; ++l)
                                 {
-                                    int buff_x = i + k;
-                                    int buff_y = j + l;
-                                    try {
-                                        if (_map->get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(k == 0 && l == 0))
-                                        {
-                                            nearby_piece = true;
-                                            k = 2;
-                                            l = 2;
-                                        }
-                                    } catch (std::exception) {}
+                                    unsigned buff_x = i + k;
+                                    unsigned buff_y = j + l;
+                                    if (buff_x < Map::Size && buff_y < Map::Size
+                                        && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(k == 0 && l == 0))
+                                    {
+                                        nearby_piece = true;
+                                        k = 2;
+                                        l = 2;
+                                    }
                                 }
                             if (nearby_piece)
                                 ret_moves.push_back(std::tuple<int, int>(i, j));
