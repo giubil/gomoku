@@ -9,7 +9,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     std::srand(time(0));
     Map *m = new Map(map);
     Referee *r = new Referee(ref);
-    
+
     State rootstate(m, this->_color , r);
     Node rootnode = Node(&rootstate);
 
@@ -69,8 +69,6 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     /*for (auto it = rootnode.get_childs().begin(); it != rootnode.get_childs().end(); ++it)
         (*it)->print_node();*/
     buff_move = rootnode.get_most_visited()->get_move();
-    delete m;
-    delete r;
     return (new std::tuple<int, int, bool>(std::get<0>(buff_move), std::get<1>(buff_move), true));
 }
 

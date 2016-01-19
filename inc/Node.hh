@@ -17,6 +17,7 @@ class Node
     std::tuple<int, int>            *_move;
 public:
     Node(State *state, Node *parent=nullptr, std::tuple<int, int> *move=nullptr);
+    ~Node();
     Node *create_children(std::tuple<int, int> move, State *state);
     void update(int result);
     Node *get_UTC_children();

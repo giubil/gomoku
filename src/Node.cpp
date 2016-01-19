@@ -4,6 +4,18 @@ Node::Node(State *state, Node *parent, std::tuple<int, int> *move) : _parent(par
 {
 }
 
+Node::~Node()
+{
+  delete _move;
+  std::list<Node *>::iterator it;
+  it = _child_list.begin();
+  while (it != _child_list.end())
+  {
+    delete *it;
+    ++it;
+  }
+}
+
 Node *Node::create_children(std::tuple<int, int> move, State *state)
 {
     Node    *child_node = new Node(state, this, new std::tuple<int, int>(move));
