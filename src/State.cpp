@@ -34,7 +34,8 @@ void State::update_moves()
 
     if (_ref->get_winner() != player_won::NONE)
     {
-//        std::cout << "I won" << std::endl;
+        /*std::cout << "I won" << std::endl;
+        _map->print_occ_map();*/
         _won = _ref->get_winner();
         _untried_moves = ret_moves;
         return ;
@@ -71,6 +72,7 @@ void State::update_moves()
             }
         }
     _untried_moves = ret_moves;
+    //std::cout << "Updated moves with size = " << ret_moves.size() << std::endl;
 }
 
 std::list<std::tuple<int, int>> State::get_moves()
@@ -86,7 +88,7 @@ void State::do_move(std::tuple<int, int> move)
     _ref->calc();
     _won = _ref->get_winner();
     _whose_turn = _whose_turn == APlayer::player_color::WHITE ? APlayer::player_color::BLACK : APlayer::player_color::WHITE;
-    _tried_moves = std::list<std::tuple<int, int>>();
+    //_tried_moves = std::list<std::tuple<int, int>>();
     update_moves();
 }
 
@@ -117,5 +119,6 @@ APlayer::player_color State::get_turn() const { return (_whose_turn);}
 
 void State::print_map() const
 {
-//    _map->print_occ_map();
+    _map->print_occ_map();
 }
+std::list<std::tuple<int, int>> State::get_untried_moves() { return (_untried_moves);}

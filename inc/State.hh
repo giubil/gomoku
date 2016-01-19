@@ -28,6 +28,7 @@ public:
     std::tuple<int, int> get_random_move();
     APlayer::player_color get_turn() const;
     void push_tried_move(std::tuple<int, int> move);
+    std::list<std::tuple<int, int>> get_untried_moves();
     void print_map() const;
 };
 
