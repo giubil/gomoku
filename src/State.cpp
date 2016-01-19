@@ -84,8 +84,7 @@ void State::do_move(std::tuple<int, int> move)
 {
     _map->set_occ_case(std::get<0>(move), std::get<1>(move), (_whose_turn == APlayer::WHITE ? case_type::WHITE : case_type::BLACK));
     _ref->feed_map(_map);
-    _ref->remove_capture_pieces(std::get<0>(move), std::get<1>(move));
-    _ref->calc();
+    _ref->calc(std::get<0>(move), std::get<1>(move));
     _won = _ref->get_winner();
     _whose_turn = _whose_turn == APlayer::player_color::WHITE ? APlayer::player_color::BLACK : APlayer::player_color::WHITE;
     //_tried_moves = std::list<std::tuple<int, int>>();

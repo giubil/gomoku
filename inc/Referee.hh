@@ -28,8 +28,8 @@ public:
     Referee &operator=(const Referee &);
     void feed_map(Map *map);
 	void remove_capture_pieces(unsigned x, unsigned y);
-	void calc();
-	void set_disallowed() const;
+	void calc(unsigned x, unsigned y);
+	void set_disallowed(unsigned x, unsigned y) const;
     player_won get_winner() const;
     std::vector<sf::Vector2i> &get_to_clean();
 };

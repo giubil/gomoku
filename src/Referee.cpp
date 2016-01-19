@@ -102,7 +102,7 @@ player_won Referee::five_in_a_row() const
     return (player_won::NONE);
 }
 
-void Referee::set_disallowed() const
+void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
 {
     int tab_patern[][9] = {{1, 2, 2, 1, 1, 1, 0, 0, 0},
         {0, 1, 2, 2, 1, 1, 0, 0, 0},
@@ -112,11 +112,15 @@ void Referee::set_disallowed() const
         {0, 0, 0, 1, 1, 2, 2, 1, 0},
         {0, 0, 0, 1, 1, 1, 2, 2, 1}};
     int tab_buff[][2] = {{0, -1}, {1, 0}, {1, 1}, {-1, 1}};
-    unsigned buff_x, buff_y;
+    unsigned buff_x, buff_y,
+    max_x = last_x + 5>Map::Size?(Map::Size-1):(last_x+5),
+    max_y = last_y + 5>Map::Size?(Map::Size-1):(last_y+5),
+    min_x = last_x - 5>Map::Size?1:(last_x-5),
+    min_y = last_y - 5>Map::Size?1:(last_y-5);
     
-    for (unsigned x = 1; x < Map::Size - 1; ++x)
+    for (unsigned x = min_x; x < max_x; ++x)
     {
-        for (unsigned y = 1; y < Map::Size - 1; ++y)
+        for (unsigned y = min_y; y < max_y; ++y)
         {
             unsigned black = 0, white = 0;
             if (_map->get_occ_case(x, y) == EMPTY)
@@ -148,14 +152,15 @@ void Referee::set_disallowed() const
                             {
                                 if (color == BLACK)
                                     black++;
-                                else
+                                else if (color == WHITE)
                                     white++;
                             }
+                        
                         }
-                        _map->set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
                     }
                 }
             }
+            _map->set_ref_case(x, y, static_cast<case_ref_type>((black>1?DISALLOW_BLACK:0) | (white>1?DISALLOW_WHITE:0)));
         }
     }
 }
@@ -194,10 +199,11 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
     }
 }
 
-void Referee::calc()
+void Referee::calc(unsigned x, unsigned y)
 {
+    remove_capture_pieces(x, y);
     _result = five_in_a_row();
-    set_disallowed();
+    set_disallowed(x, y);
 }
 
 player_won Referee::get_winner() const

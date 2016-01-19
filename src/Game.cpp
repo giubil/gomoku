@@ -3,7 +3,7 @@
 Game::Game()
 : _map(*new Map()), _ref(*new Referee(&_map))
 {
-
+    _map.set_occ_case(8, 8, WHITE);
 }
 
 int Game::mainLoop(sf::RenderWindow &window)
@@ -63,7 +63,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
             printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
 			try {
-                if (_map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_WHITE)
+                if (_map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_BLACK)
                     || _map.get_occ_case(x, y) != EMPTY)
 				{
 					done = false;
@@ -72,8 +72,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
 				{
 					_map.set_occ_case(x, y, _playerTurn ? WHITE : BLACK);
 					_tiles[x][y].setTexture(_playerTurn ? _textWhite : _textBlack);
-					_ref.remove_capture_pieces(x, y);
-					_ref.calc();
+					_ref.calc(x, y);
 					itemsToClear = _ref.get_to_clean();
 					for (unsigned int i = 0; i < itemsToClear.size(); i++)
 					{
