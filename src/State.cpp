@@ -1,5 +1,27 @@
 #include "State.hh"
 
+template <int L> int State::opti_loop(bool *nearby_piece, size_t *i, size_t *j, int *k)
+{
+  unsigned buff_x = *i + *k;
+  unsigned buff_y = *j + L;
+  if (buff_x < Map::Size && buff_y < Map::Size
+      && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(*k == 0 && L == 0))
+  {
+      *nearby_piece = true;
+      *k = 2;
+      return (2);
+  }
+  if (L < 2)
+    return (opti_loop<L + 1>(nearby_piece, i, j, k));
+  else
+    return (2);
+}
+
+template <> int State::opti_loop<2>(bool *nearby_piece, size_t *i, size_t *j, int *k)
+{
+  return (2);
+}
+
 State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
 : _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE)
 {
@@ -30,7 +52,7 @@ void State::update_moves()
 {
     APlayer::player_color buff_player;
     std::list<std::tuple<int, int>> ret_moves;
-
+    std::list<std::tuple<int, int>>::iterator end;
 
     if (_ref->get_winner() != player_won::NONE)
     {
@@ -49,22 +71,14 @@ void State::update_moves()
                 if ((buff_player == APlayer::WHITE && _map->get_ref_case(i, j) != DISALLOW_WHITE)
                     || (buff_player == APlayer::BLACK && _map->get_ref_case(i, j) != DISALLOW_BLACK))
                     {
-                        if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int>(i ,j)) != _tried_moves.end()))
+                        end = _tried_moves.end();
+                        if (!(std::find(_tried_moves.begin(), end, std::tuple<int, int>(i ,j)) != end))
                         {
                             bool nearby_piece = false;
                             for (int k = -1; k < 2; ++k)
-                                for (int l = -1; l < 2; ++l)
-                                {
-                                    unsigned buff_x = i + k;
-                                    unsigned buff_y = j + l;
-                                    if (buff_x < Map::Size && buff_y < Map::Size
-                                        && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(k == 0 && l == 0))
-                                    {
-                                        nearby_piece = true;
-                                        k = 2;
-                                        l = 2;
-                                    }
-                                }
+                            {
+                              opti_loop<-1>(&nearby_piece, &i, &j, &k);
+                            }
                             if (nearby_piece)
                                 ret_moves.push_back(std::tuple<int, int>(i, j));
                         }
