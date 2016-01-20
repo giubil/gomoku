@@ -17,7 +17,8 @@ class State
     std::list<std::tuple<int, int>> _tried_moves;
     std::list<std::tuple<int, int>> _untried_moves;
     void update_moves();
-    template <int L>int opti_loop(bool *nearby_piece, size_t *i, size_t *j, int *k);
+    template <int L>int opti_loop(bool *nearby_piece, size_t *i, size_t *j, int k);
+    template <int K> int second_loop(bool *nearby_piece, size_t *i, size_t *j);
 
 public:
     State(Map *map, APlayer::player_color whose_turn, Referee *ref);
