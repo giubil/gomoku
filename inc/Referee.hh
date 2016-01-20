@@ -32,6 +32,9 @@ public:
 	void set_disallowed(unsigned x, unsigned y) const;
     player_won get_winner() const;
     std::vector<sf::Vector2i> &get_to_clean();
+
+	void print_captured() const;
+	Map *get_map() const;
 };
 
 #endif

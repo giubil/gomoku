@@ -16,6 +16,7 @@ class State
     player_won                      _won;
     std::list<std::tuple<int, int>> _tried_moves;
     std::list<std::tuple<int, int>> _untried_moves;
+    unsigned                        _depth;
     void update_moves();
 public:
     State(Map *map, APlayer::player_color whose_turn, Referee *ref);
@@ -30,6 +31,7 @@ public:
     void push_tried_move(std::tuple<int, int> move);
     std::list<std::tuple<int, int>> get_untried_moves();
     void print_map() const;
+    unsigned get_depth() const;
 };
 
 #endif /* !STATE_HH_ */

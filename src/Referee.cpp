@@ -27,7 +27,7 @@ bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_t
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned int buff_x, buff_y;
-    
+
     for (int i = 0; i < 8; ++i)
     {
         if (i % 4 != direction % 4)
@@ -55,7 +55,7 @@ player_won Referee::five_in_a_row() const
     unsigned int buff_x, buff_y, buff_val;
     bool is_breakable;
     size_t size_five, j;
-    
+
     for (unsigned int x = 0; x < Map::Size; ++x)
         for (unsigned int y = 0; y < Map::Size; ++y)
         {
@@ -94,7 +94,7 @@ player_won Referee::five_in_a_row() const
                         {
                             return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
                         }
-                        
+
                     }
                 }
             }
@@ -117,7 +117,7 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
     max_y = last_y + 5>Map::Size?(Map::Size-1):(last_y+5),
     min_x = last_x - 5>Map::Size?1:(last_x-5),
     min_y = last_y - 5>Map::Size?1:(last_y-5);
-    
+
     for (unsigned x = min_x; x < max_x; ++x)
     {
         for (unsigned y = min_y; y < max_y; ++y)
@@ -155,7 +155,7 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
                                 else if (color == WHITE)
                                     white++;
                             }
-                        
+
                         }
                     }
                 }
@@ -171,7 +171,7 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned buff_x, buff_y;
     case_type color = _map->get_occ_case(x, y);
-    
+
     _to_clean.clear();
     if (color == EMPTY)
         return;
@@ -220,3 +220,10 @@ std::vector<sf::Vector2i> &Referee::get_to_clean()
 {
     return _to_clean;
 }
+
+void Referee::print_captured() const
+{
+    std::cout << "White : " << _captured[0] << " Black : " << _captured[1] << std::endl;
+}
+
+Map *Referee::get_map() const { return (_map);}

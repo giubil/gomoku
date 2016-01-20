@@ -1,7 +1,7 @@
 #include "State.hh"
 
 State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
-: _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE)
+: _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE), _depth(0)
 {
     _ref->feed_map(map);
     update_moves();
@@ -34,20 +34,28 @@ void State::update_moves()
 
     if (_ref->get_winner() != player_won::NONE)
     {
-        /*std::cout << "I won" << std::endl;
-        _map->print_occ_map();*/
+        /*std::cout << _ref->get_winner() << " won" << std::endl;
+        std::cout << "My map" << std::endl;
+        _map->print_occ_map();
+        std::cout << "Ref map" << std::endl;
+        _ref->get_map()->print_occ_map();*/
+        //_ref->print_captured();
         _won = _ref->get_winner();
         _untried_moves = ret_moves;
         return ;
     }
+
+    case_ref_type buff_ref;
+
     for (size_t i = 0; i < Map::Size; ++i)
         for (size_t j = 0; j < Map::Size; ++j)
         {
             if (_map->get_occ_case(i, j) == case_type::EMPTY)
             {
                 buff_player = _whose_turn == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
-                if ((buff_player == APlayer::WHITE && _map->get_ref_case(i, j) != DISALLOW_WHITE)
-                    || (buff_player == APlayer::BLACK && _map->get_ref_case(i, j) != DISALLOW_BLACK))
+                buff_ref = _map->get_ref_case(i, j);
+                if ((buff_player == APlayer::WHITE && buff_ref != DISALLOW_WHITE)
+                    || (buff_player == APlayer::BLACK && buff_ref != DISALLOW_BLACK))
                     {
                         if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int>(i ,j)) != _tried_moves.end()))
                         {
@@ -58,7 +66,8 @@ void State::update_moves()
                                     unsigned buff_x = i + k;
                                     unsigned buff_y = j + l;
                                     if (buff_x < Map::Size && buff_y < Map::Size
-                                        && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(k == 0 && l == 0))
+                                        && !(k == 0 && l == 0)
+                                        && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY)
                                     {
                                         nearby_piece = true;
                                         k = 2;
@@ -88,6 +97,7 @@ void State::do_move(std::tuple<int, int> move)
     _won = _ref->get_winner();
     _whose_turn = _whose_turn == APlayer::player_color::WHITE ? APlayer::player_color::BLACK : APlayer::player_color::WHITE;
     //_tried_moves = std::list<std::tuple<int, int>>();
+    _depth += 1;
     update_moves();
 }
 
@@ -121,3 +131,4 @@ void State::print_map() const
     _map->print_occ_map();
 }
 std::list<std::tuple<int, int>> State::get_untried_moves() { return (_untried_moves);}
+unsigned State::get_depth() const { return (_depth);}

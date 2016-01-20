@@ -25,6 +25,14 @@ Node *Node::create_children(std::tuple<int, int> move, State *state)
     return (child_node);
 }
 
+Node *Node::get_random_children()
+{
+    auto it = _child_list.begin();
+
+    std::advance(it, std::rand() % _child_list.size());
+    return (*it);
+}
+
 Node *Node::get_UTC_children()
 {
     /*auto it = _child_list.begin();
@@ -37,24 +45,27 @@ Node *Node::get_UTC_children()
 
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
     {
-        double buff_val = ((double)(*it)->get_wins()) / ((double)(*it)->get_visits())
-        * sqrt(2 * log((double)(*it)->get_parent()->get_visits()) / ((double)(*it)->get_visits()));
-        if (buff_val > best_value)
+        double buff_val = ((double)(*it)->_wins) / ((double)(*it)->_visits)
+        + sqrt(2 * log((double)(*it)->_parent->_visits) / ((double)(*it)->_visits));
+        if ((*it)->_wins >= 0 && buff_val > best_value)
         {
             best_value = buff_val;
             selected = (*it);
         }
     }
     if (selected == nullptr)
-        return _child_list.front();
+        do {
+            selected = get_random_children();
+        } while (selected->_wins < 0);
+
     return (selected);
-    _child_list.sort([](const Node *a, const Node *b){
+    /*_child_list.sort([](const Node *a, const Node *b){
         double a_val = ((double)a->get_wins()) / ((double)a->get_visits())
         * sqrt(2 * log((double)a->get_parent()->get_visits()) / ((double)a->get_visits()));
         double b_val = ((double)b->get_wins()) / ((double)b->get_visits())
         * sqrt(2 * log((double)b->get_parent()->get_visits()) / ((double)b->get_visits()));
         return (a_val > b_val ? a : b);
-    });
+    });*/
     return (_child_list.front());
 }
 

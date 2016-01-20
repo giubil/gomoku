@@ -30,6 +30,7 @@ public:
     Node *get_most_visited();
     void print_node();
     void tree_to_string(int indent);
+    Node *get_random_children();
 };
 
 #endif /* !NODE_HH_ */

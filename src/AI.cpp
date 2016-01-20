@@ -44,7 +44,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
 
         int j = 0;
 
-        while (!buff_state->get_moves().empty())
+        while (!buff_state->get_moves().empty() && buff_state->get_depth() < 50)
         {
             ++j;
             buff_state->do_move(buff_state->get_random_move());
