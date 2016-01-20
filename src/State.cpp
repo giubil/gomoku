@@ -1,6 +1,6 @@
 #include "State.hh"
 
-template <int L> int State::opti_loop(bool *nearby_piece, size_t *i, size_t *j, int k)
+template <int L> int State::second_loop(bool *nearby_piece, size_t *i, size_t *j, int k)
 {
   unsigned buff_x = *i + k;
   unsigned buff_y = *j + L;
@@ -12,25 +12,25 @@ template <int L> int State::opti_loop(bool *nearby_piece, size_t *i, size_t *j, 
       return (2);
   }
   if (L < 2)
-    return (opti_loop<L + 1>(nearby_piece, i, j, k));
+    return (second_loop<L + 1>(nearby_piece, i, j, k));
   else
     return (2);
 }
 
-template <> int State::opti_loop<2>(bool *nearby_piece, size_t *i, size_t *j, int k)
+template <> int State::second_loop<2>(bool *nearby_piece, size_t *i, size_t *j, int k)
 {
   return (2);
 }
 
-template <int K> int State::second_loop(bool *nearby_piece, size_t *i, size_t *j)
+template <int K> int State::first_loop(bool *nearby_piece, size_t *i, size_t *j)
 {
-  if (opti_loop<-1>(nearby_piece, i, j, K) < 2)
-    return (second_loop<K + 1>(nearby_piece, i, j));
+  if (second_loop<-1>(nearby_piece, i, j, K) < 2)
+    return (first_loop<K + 1>(nearby_piece, i, j));
   else
     return (2);
 }
 
-template <> int State::second_loop<2>(bool *nearby_piece, size_t *i, size_t *j)
+template <> int State::first_loop<2>(bool *nearby_piece, size_t *i, size_t *j)
 {
   return(2);
 }
@@ -87,7 +87,7 @@ void State::update_moves()
                         if (!(std::find(_tried_moves.begin(), end, std::tuple<int, int>(i ,j)) != end))
                         {
                             bool nearby_piece = false;
-                            second_loop<-1>(&nearby_piece, &i, &j);
+                            first_loop<-1>(&nearby_piece, &i, &j);
                             if (nearby_piece)
                                 ret_moves.push_back(std::tuple<int, int>(i, j));
                         }
