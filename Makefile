@@ -8,6 +8,14 @@ MKDIR	= mkdir -p
 CXXFLAGS	+= -I./$(INC_PATH)
 CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -ggdb
 LDFLAGS     =  -pthread
+ifeq ($(OS),Windows_NT)
+    echo "Not working on Windows"
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Darwin)
+        CXXFLAGS    += -stdlib=libc++
+    endif
+endif
 
 # LDFLAGS		= -ldl -pthread
 # LDFLAGS		+= -L./lib
