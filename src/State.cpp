@@ -1,33 +1,8 @@
-#include "State.hh"
-
-template <int L> int State::second_nearby_loop(bool *nearby_piece, size_t i, size_t j, int k)
-{
-  unsigned buff_x = i + k;
-  unsigned buff_y = j + L;
-  if (buff_x < Map::Size && buff_y < Map::Size
-      && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY && !(k == 0 && L == 0))
-  {
-      *nearby_piece = true;
-      k = 2;
-      return (2);
-  }
-  if (L < 2)
-    return (second_nearby_loop<L + 1>(nearby_piece, i, j, k));
-  else
-    return (2);
-}
+#include "State.hpp"
 
 template <> int State::second_nearby_loop<2>(bool *nearby_piece, size_t i, size_t j, int k)
 {
   return (2);
-}
-
-template <int K> int State::first_nearby_loop(bool *nearby_piece, size_t i, size_t j)
-{
-  if (second_nearby_loop<-1>(nearby_piece, i, j, K) < 2)
-    return (first_nearby_loop<K + 1>(nearby_piece, i, j));
-  else
-    return (2);
 }
 
 template <> int State::first_nearby_loop<2>(bool *nearby_piece, size_t i, size_t j)
@@ -35,47 +10,9 @@ template <> int State::first_nearby_loop<2>(bool *nearby_piece, size_t i, size_t
   return(2);
 }
 
-template <int J>int State::second_map_loop(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
-{
-  std::list<std::tuple<int, int>>::iterator end;
-  if (J < Map::Size)
-  {
-    if (_map->get_occ_case(i, J) == case_type::EMPTY)
-    {
-        buff_player = _whose_turn == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
-        if ((buff_player == APlayer::WHITE && _map->get_ref_case(i, J) != DISALLOW_WHITE)
-            || (buff_player == APlayer::BLACK && _map->get_ref_case(i, J) != DISALLOW_BLACK))
-            {
-                end = _tried_moves.end();
-                if (!(std::find(_tried_moves.begin(), end, std::tuple<int, int>(i ,J)) != end))
-                {
-                    bool nearby_piece = false;
-                    first_nearby_loop<-1>(&nearby_piece, i, J);
-                    if (nearby_piece)
-                        ret_moves.push_back(std::tuple<int, int>(i, J));
-                }
-            }
-    }
-    return (second_map_loop<J + 1>(i, buff_player, ret_moves));
-  }
-  else
-    return (Map::Size);
-}
-
 template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
 {
   return (Map::Size);
-}
-
-template <int I>int State::first_map_loop(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
-{
-  if (I < Map::Size)
-  {
-    second_map_loop<0>(I, buff_player, ret_moves);
-    return (first_map_loop<I + 1>(buff_player, ret_moves));
-  }
-  else
-    return (Map::Size);
 }
 
 template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
@@ -101,7 +38,6 @@ State &State::operator=(const State &s)
 {
     return (*new State(s));
 }
-
 
 State::~State()
 {

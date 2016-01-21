@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include "APlayer.hh"
-#include "State.hh"
+#include "State.hpp"
 
 class Node
 {

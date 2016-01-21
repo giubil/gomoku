@@ -41,7 +41,7 @@ INC         =   Map.hh \
 				Player.hh \
 				AI.hh \
 				Node.hh \
-				State.hh
+				State.hpp
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 

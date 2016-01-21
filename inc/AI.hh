@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <ctime>
 #include "APlayer.hh"
-#include "State.hh"
+#include "State.hpp"
 #include "Node.hh"
 
 class AI : public APlayer {
