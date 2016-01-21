@@ -1,5 +1,5 @@
-#ifndef STATE_HH_
-# define STATE_HH_
+#ifndef STATE_HPP_
+# define STATE_HPP_
 #include <list>
 #include <cstdlib>
 #include <iostream>
@@ -93,4 +93,4 @@ public:
     void print_map() const;
 };
 
-#endif /* !STATE_HH_ */
+#endif /* !STATE_HPP_ */
