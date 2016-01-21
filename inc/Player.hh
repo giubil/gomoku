@@ -5,7 +5,7 @@
 
 class Player : public APlayer {
 public:
-    virtual std::tuple<int, int, bool> const * play(Map const &map, Referee &ref, sf::RenderWindow &window) const;
+    virtual std::tuple<int, int, bool> const * play(Map const &map, Referee &ref, sf::RenderWindow &window);
 };
 
 #endif /* !PLAYER_HH_ */

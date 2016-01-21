@@ -38,8 +38,8 @@ int Menu::menuLoop()
                     //TODO : menu to choose
 
                     // temp
+                    _game->setPlayer(1, new AI());
                     _game->setPlayer(0, new Player());
-                    _game->setPlayer(1, new Player());
                     // !temp
                   }
                   catch (std::runtime_error e)

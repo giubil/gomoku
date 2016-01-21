@@ -6,6 +6,7 @@
 #include "APlayer.hh"
 #include "State.hh"
 
+void print_mutex(char *mutex_name);
 class Node
 {
     Node                            *_parent;
@@ -15,6 +16,9 @@ class Node
     int                             _visits;
     State                           *_state;
     std::tuple<int, int>            *_move;
+    std::mutex                      _mutex;
+    std::mutex                      _state_mutex;
+    std::mutex                      _update_mutex;
 public:
     Node(State *state, Node *parent=nullptr, std::tuple<int, int> *move=nullptr);
     ~Node();
@@ -24,7 +28,7 @@ public:
     int get_wins() const;
     int get_visits() const;
     Node *get_parent() const;
-    State *get_state() const;
+    State *get_state();
     const std::list<Node *> &get_childs() const;
     std::tuple<int, int> get_move() const;
     Node *get_most_visited();

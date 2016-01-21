@@ -4,3 +4,4 @@ gomoku
 .tags
 *.xcodeproj
 test.py
+gomoku.dSYM
