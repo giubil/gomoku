@@ -21,6 +21,7 @@ class State
     template <int K> int first_nearby_loop(bool *nearby_piece, size_t i, size_t j);
 
     template <int J>int second_map_loop(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves);
+    template <int I>int first_map_loop(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves);
 public:
     State(Map *map, APlayer::player_color whose_turn, Referee *ref);
     State(const State&);

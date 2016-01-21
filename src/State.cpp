@@ -67,6 +67,22 @@ template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& b
   return (Map::Size);
 }
 
+template <int I>int State::first_map_loop(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+{
+  if (I < Map::Size)
+  {
+    second_map_loop<0>(I, buff_player, ret_moves);
+    return (first_map_loop<I + 1>(buff_player, ret_moves));
+  }
+  else
+    return (Map::Size);
+}
+
+template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+{
+  return (Map::Size);
+}
+
 State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
 : _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE)
 {
@@ -107,8 +123,7 @@ void State::update_moves()
         _untried_moves = ret_moves;
         return ;
     }
-    for (size_t i = 0; i < Map::Size; ++i)
-      second_map_loop<0>(i, buff_player, ret_moves);
+    first_map_loop<0>(buff_player, ret_moves);
     _untried_moves = ret_moves;
     //std::cout << "Updated moves with size = " << ret_moves.size() << std::endl;
 }
