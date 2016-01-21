@@ -17,9 +17,10 @@ class State
     std::list<std::tuple<int, int>> _tried_moves;
     std::list<std::tuple<int, int>> _untried_moves;
     void update_moves();
-    template <int L>int second_loop(bool *nearby_piece, size_t *i, size_t *j, int k);
-    template <int K> int first_loop(bool *nearby_piece, size_t *i, size_t *j);
+    template <int L>int second_nearby_loop(bool *nearby_piece, size_t i, size_t j, int k);
+    template <int K> int first_nearby_loop(bool *nearby_piece, size_t i, size_t j);
 
+    template <int J>int second_map_loop(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves);
 public:
     State(Map *map, APlayer::player_color whose_turn, Referee *ref);
     State(const State&);
