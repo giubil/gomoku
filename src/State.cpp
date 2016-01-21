@@ -2,21 +2,33 @@
 
 template <> int State::second_nearby_loop<2>(bool *nearby_piece, size_t i, size_t j, int k)
 {
+  (void)nearby_piece;
+  (void)i;
+  (void)j;
+  (void)k;
   return (2);
 }
 
 template <> int State::first_nearby_loop<2>(bool *nearby_piece, size_t i, size_t j)
 {
+  (void)nearby_piece;
+  (void)i;
+  (void)j;
   return(2);
 }
 
 template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
 {
+  (void)buff_player;
+  (void)i;
+  (void)ret_moves;
   return (Map::Size);
 }
 
 template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
 {
+  (void)buff_player;
+  (void)ret_moves;
   return (Map::Size);
 }
 
