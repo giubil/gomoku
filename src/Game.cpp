@@ -3,7 +3,6 @@
 Game::Game()
 : _map(*new Map()), _ref(*new Referee(&_map))
 {
-    _map.set_occ_case(8, 8, WHITE);
 }
 
 int Game::mainLoop(sf::RenderWindow &window)
@@ -13,7 +12,8 @@ int Game::mainLoop(sf::RenderWindow &window)
     _playerTurn = true;
     while (window.isOpen())
 	{
-		this->eventsHandling(window);
+        if (!_Win)
+            this->eventsHandling(window);
 		window.clear();
         window.draw(_BackGround);
 		for (int i = 0; i < 19; i++)
@@ -36,8 +36,12 @@ int Game::mainLoop(sf::RenderWindow &window)
         {
             window.draw(_rectWin);
             window.draw(_textWin);
-            if (clock.getElapsedTime().asSeconds() > 3)
+            if (_clock.getElapsedTime().asSeconds() > 3)
+            {
                 window.close();
+                return (0);
+            }
+            
         }
 		window.display();
 	}
@@ -53,6 +57,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
     while (!done)
     {
         Map *m = new Map(_map);
+        clock_t tStart = clock();
 		t = _players[p]->play(*m, _ref, window);
         delete m;
         if (t == nullptr)
@@ -93,7 +98,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
                     if (_ref.get_winner() != NONE)
                     {
                         if (!_Win)
-                            clock.restart();
+                            _clock.restart();
                         _Win = true;
                         if (_ref.get_winner() == WHITE_WON)
                             _textWin.setString("White player won !");
@@ -104,6 +109,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
                         _textWin.setOrigin(_textWin.getLocalBounds().width/2.0f,_textWin.getLocalBounds().height/2.0f);
                         _rectWin.setSize(sf::Vector2f(_textWin.getLocalBounds().width + 20, _textWin.getLocalBounds().height + 20));
                         _rectWin.setOrigin(_rectWin.getLocalBounds().width/2.0f,_rectWin.getLocalBounds().height/2.0f);
+                        _clock.restart();
                     }
 				}
 			} catch (std::exception) {

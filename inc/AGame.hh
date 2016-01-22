@@ -36,7 +36,7 @@ protected:
     sf::RectangleShape _rectWin;
     sf::Text _textWin;
     bool _Win;
-    sf::Clock clock;
+    sf::Clock _clock;
 
     bool _playerTurn = true;
     sf::Vector2f _lastSelected;
