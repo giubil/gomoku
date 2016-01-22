@@ -122,7 +122,8 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
     {
         for (unsigned y = min_y; y < max_y; ++y)
         {
-            unsigned black = 0, white = 0;
+            unsigned volatile black = 0;
+            unsigned volatile white = 0;
             if (_map->get_occ_case(x, y) == EMPTY)
             {
                 for (unsigned i = 1; i < 7; ++i)
@@ -151,11 +152,10 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
                             if (j == j_max - 1)
                             {
                                 if (color == BLACK)
-                                    black++;
+                                    black += 1;
                                 else if (color == WHITE)
-                                    white++;
+                                    white += 1;
                             }
-                        
                         }
                     }
                 }
