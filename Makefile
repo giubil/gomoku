@@ -6,7 +6,7 @@ RM		= rm -rf
 MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
-CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3
+CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3 -fno-aggressive-loop-optimizations
 LDFLAGS     =  -pthread
 
 # LDFLAGS		= -ldl -pthread

@@ -3,12 +3,14 @@
 State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
 : _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE), _depth(0)
 {
+    _depth = 0;
     _ref->feed_map(map);
+    //_buff_map = new Map(_map);
     update_moves();
 }
 
 State::State(const State &s)
-: _map(new Map(*s._map)), _ref(new Referee(*s._ref)), _whose_turn(s._whose_turn), _won(s._won)
+: _map(new Map(*s._map)), _ref(new Referee(*s._ref)), _whose_turn(s._whose_turn), _won(s._won), _depth(s._depth)
 {
     _ref->feed_map(_map);
     update_moves();
@@ -52,13 +54,21 @@ void State::update_moves()
         {
             if (_map->get_occ_case(i, j) == case_type::EMPTY)
             {
-                buff_player = _whose_turn == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
+                buff_player = _whose_turn;// == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
                 buff_ref = _map->get_ref_case(i, j);
                 if ((buff_player == APlayer::WHITE && buff_ref != DISALLOW_WHITE)
                     || (buff_player == APlayer::BLACK && buff_ref != DISALLOW_BLACK))
                     {
                         if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int>(i ,j)) != _tried_moves.end()))
                         {
+                            if (_map->get_ref_winning(i, j) == (buff_player == APlayer::WHITE ?                   case_ref_winning::WHITE_WINNING : case_ref_winning::BLACK_WINNING)
+                            || _map->get_ref_winning(i, j) == (buff_player == APlayer::WHITE ? case_ref_winning::BLACK_WINNING : case_ref_winning::WHITE_WINNING))
+                                {
+                                    ret_moves.clear();
+                                    ret_moves.push_back(std::tuple<int, int>(i, j));
+                                    _untried_moves = ret_moves;
+                                    return ;
+                                }
                             bool nearby_piece = false;
                             for (int k = -1; k < 2; ++k)
                                 for (int l = -1; l < 2; ++l)
@@ -132,3 +142,4 @@ void State::print_map() const
 }
 std::list<std::tuple<int, int>> State::get_untried_moves() { return (_untried_moves);}
 unsigned State::get_depth() const { return (_depth);}
+Referee *State::get_ref() const { return (_ref);}

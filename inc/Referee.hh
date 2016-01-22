@@ -20,8 +20,8 @@ private:
 	Map *_map;
     player_won _result;
 	unsigned _captured[2];
-    player_won five_in_a_row() const;
-    bool find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2], unsigned int x, unsigned int y) const;
+    player_won five_in_a_row();
+    bool find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2], unsigned int x, unsigned int y);
 public:
 	Referee(Map *map);
     Referee(const Referee &);
@@ -32,7 +32,7 @@ public:
 	void set_disallowed(unsigned x, unsigned y) const;
     player_won get_winner() const;
     std::vector<sf::Vector2i> &get_to_clean();
-
+	unsigned get_captured(int color) const;
 	void print_captured() const;
 	Map *get_map() const;
 };

@@ -11,6 +11,7 @@
 class State
 {
     Map                             *_map;
+    //Map                             *_buff_map;
     Referee                         *_ref;
     APlayer::player_color           _whose_turn;
     player_won                      _won;
@@ -32,6 +33,7 @@ public:
     std::list<std::tuple<int, int>> get_untried_moves();
     void print_map() const;
     unsigned get_depth() const;
+    Referee *get_ref() const;
 };
 
 #endif /* !STATE_HH_ */

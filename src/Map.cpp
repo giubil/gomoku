@@ -89,26 +89,14 @@ case_ref_type Map::get_ref_case(unsigned int x, unsigned int y) const
 	return (_map[x][y].referee);
 }
 
-std::uint32_t Map::get_AI_data(unsigned x, unsigned y, case_type c) const
+case_ref_winning Map::get_ref_winning(unsigned int x, unsigned int y) const
 {
-	switch (c) {
-	case BLACK:
-		return (_map[x][y].data_black);
-	case WHITE:
-		return (_map[x][y].data_white);
-	default:
-		throw std::out_of_range("Can't get the AI data of something not BLACK or WHITE");
-	}
+	check_case_exist(x, y);
+	return (_map[x][y].winning);
 }
 
-void Map::set_AI_data(unsigned x, unsigned y, case_type c, std::uint32_t value)
+void Map::set_ref_winning(unsigned int x, unsigned int y, case_ref_winning content)
 {
-	switch (c) {
-	case BLACK:
-		_map[x][y].data_black = value;
-	case WHITE:
-		_map[x][y].data_white = value;
-	default:
-		throw std::out_of_range("Can't set the AI data of something not BLACK or WHITE");
-	}
+	check_case_exist(x, y);
+	_map[x][y].winning = content;
 }

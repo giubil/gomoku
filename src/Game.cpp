@@ -3,7 +3,7 @@
 Game::Game()
 : _map(*new Map()), _ref(*new Referee(&_map))
 {
-    _map.set_occ_case(8, 8, WHITE);
+    //_map.set_occ_case(8, 8, WHITE);
 }
 
 int Game::mainLoop(sf::RenderWindow &window)

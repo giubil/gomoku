@@ -17,7 +17,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
     State *buff_state;
     std::tuple<int, int> buff_move;
 
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 2048; ++i)
     {
         if (i % 10 == 0)
             std::cout << "i = " << i << std::endl;
@@ -44,7 +44,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
 
         int j = 0;
 
-        while (!buff_state->get_moves().empty() && buff_state->get_depth() < 50)
+        while (!buff_state->get_moves().empty() && buff_state->get_depth() < 30)
         {
             ++j;
             buff_state->do_move(buff_state->get_random_move());
@@ -55,22 +55,42 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
         buff_state->print_map();*/
 
         //Backpropagating
+        bool updated = false;
         while (buff_node != nullptr)
         {
 //            if (buff_node->get_state()->get_results() != player_won::NONE)
 //                std::cout << buff_node->get_state()->get_results() << " won" << std::endl;
-            if ((buff_state->get_results() == player_won::BLACK_WON
+            if (rootstate.get_ref()->get_captured(_color) < buff_state->get_ref()->get_captured(_color)
+                && buff_state->get_depth() < 2)
+            {
+                buff_node->update(40, false);
+            }
+            if (((buff_state->get_results() == player_won::BLACK_WON
+                && _color == player_color::WHITE)
+                || (buff_state->get_results() == player_won::WHITE_WON
+                && _color == player_color::BLACK)) && buff_state->get_depth() < 7)
+                {
+                    buff_state->print_map();
+                    if (buff_node->get_parent() != nullptr)
+                        std::cout << "I lost with _color = " << _color << " and ref = " << buff_state->get_results() << " and move = " << std::get<0>(buff_node->get_move()) << "/" << std::get<1>(buff_node->get_move()) << std::endl;
+                        if (buff_state->get_depth() < 4)
+                            buff_node->update((int)(-10000.0 / (double)buff_state->get_depth()), true); //put the visits to zero and wins to -100
+                        else
+                            buff_node->update((int)(-10000.0 / (double)buff_state->get_depth()), false); //put the visits to zero and wins to -100
+
+                }
+            else if ((buff_state->get_results() == player_won::BLACK_WON
                 && buff_node->get_state()->get_turn() == APlayer::BLACK)
                 || (buff_state->get_results() == player_won::WHITE_WON
                 && buff_node->get_state()->get_turn() == APlayer::WHITE))
-                buff_node->update(1);
+                buff_node->update(5, false);
             else if ((buff_state->get_results() == player_won::BLACK_WON
                 && buff_node->get_state()->get_turn() == APlayer::WHITE)
                 || (buff_state->get_results() == player_won::WHITE_WON
                 && buff_node->get_state()->get_turn() == APlayer::BLACK))
-                buff_node->update(-1);
+                buff_node->update(-1, false);
             else
-                buff_node->update(0);
+                buff_node->update(1, false);
             buff_node = buff_node->get_parent();
         }
     }
@@ -78,6 +98,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
         (*it)->print_node();*/
     rootnode.tree_to_string(0);
     buff_move = rootnode.get_most_visited()->get_move();
+    std::cout << "Returned x = " << std::get<0>(buff_move) << " y = " << std::get<1>(buff_move) << std::endl;
     return (new std::tuple<int, int, bool>(std::get<0>(buff_move), std::get<1>(buff_move), true));
 }
 
