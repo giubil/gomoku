@@ -1,4 +1,36 @@
-#include "State.hh"
+#include "State.hpp"
+
+template <> int State::second_nearby_loop<2>(bool *nearby_piece, size_t i, size_t j, int k)
+{
+  (void)nearby_piece;
+  (void)i;
+  (void)j;
+  (void)k;
+  return (2);
+}
+
+template <> int State::first_nearby_loop<2>(bool *nearby_piece, size_t i, size_t j)
+{
+  (void)nearby_piece;
+  (void)i;
+  (void)j;
+  return(2);
+}
+
+template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+{
+  (void)buff_player;
+  (void)i;
+  (void)ret_moves;
+  return (Map::Size);
+}
+
+template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+{
+  (void)buff_player;
+  (void)ret_moves;
+  return (Map::Size);
+}
 
 State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
 : _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE), _depth(0)
@@ -21,7 +53,6 @@ State &State::operator=(const State &s)
     return (*new State(s));
 }
 
-
 State::~State()
 {
   delete _map;
@@ -32,7 +63,7 @@ void State::update_moves()
 {
     APlayer::player_color buff_player;
     std::list<std::tuple<int, int>> ret_moves;
-
+    std::list<std::tuple<int, int>>::iterator end;
 
     if (_ref->get_winner() != player_won::NONE)
     {
@@ -46,50 +77,7 @@ void State::update_moves()
         _untried_moves = ret_moves;
         return ;
     }
-
-    case_ref_type buff_ref;
-
-    for (size_t i = 0; i < Map::Size; ++i)
-        for (size_t j = 0; j < Map::Size; ++j)
-        {
-            if (_map->get_occ_case(i, j) == case_type::EMPTY)
-            {
-                buff_player = _whose_turn;// == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
-                buff_ref = _map->get_ref_case(i, j);
-                if ((buff_player == APlayer::WHITE && buff_ref != DISALLOW_WHITE)
-                    || (buff_player == APlayer::BLACK && buff_ref != DISALLOW_BLACK))
-                    {
-                        if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int>(i ,j)) != _tried_moves.end()))
-                        {
-                            if (_map->get_ref_winning(i, j) == (buff_player == APlayer::WHITE ?                   case_ref_winning::WHITE_WINNING : case_ref_winning::BLACK_WINNING)
-                            || _map->get_ref_winning(i, j) == (buff_player == APlayer::WHITE ? case_ref_winning::BLACK_WINNING : case_ref_winning::WHITE_WINNING))
-                                {
-                                    ret_moves.clear();
-                                    ret_moves.push_back(std::tuple<int, int>(i, j));
-                                    _untried_moves = ret_moves;
-                                    return ;
-                                }
-                            bool nearby_piece = false;
-                            for (int k = -1; k < 2; ++k)
-                                for (int l = -1; l < 2; ++l)
-                                {
-                                    unsigned buff_x = i + k;
-                                    unsigned buff_y = j + l;
-                                    if (buff_x < Map::Size && buff_y < Map::Size
-                                        && !(k == 0 && l == 0)
-                                        && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY)
-                                    {
-                                        nearby_piece = true;
-                                        k = 2;
-                                        l = 2;
-                                    }
-                                }
-                            if (nearby_piece)
-                                ret_moves.push_back(std::tuple<int, int>(i, j));
-                        }
-                    }
-            }
-        }
+    first_map_loop<0>(buff_player, ret_moves);
     _untried_moves = ret_moves;
     //std::cout << "Updated moves with size = " << ret_moves.size() << std::endl;
 }

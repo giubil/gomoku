@@ -6,7 +6,7 @@ RM		= rm -rf
 MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
-CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3 -fno-aggressive-loop-optimizations
+CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3
 LDFLAGS     =  -pthread
 
 # LDFLAGS		= -ldl -pthread
@@ -41,7 +41,7 @@ INC         =   Map.hh \
 				Player.hh \
 				AI.hh \
 				Node.hh \
-				State.hh
+				State.hpp
 
 DEP		= $(patsubst %,$(INC_PATH)/%,$(INC))
 

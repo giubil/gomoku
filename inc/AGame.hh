@@ -10,6 +10,7 @@
 
 class AGame {
 protected:
+    sf::Texture _textBackGround;
     sf::Texture _textTile;
     sf::Texture _textBlack;
     sf::Texture _textWhite;
@@ -26,6 +27,16 @@ protected:
     sf::Text _textCapturedPlayer2;
 
     std::vector<std::vector<sf::Sprite>> _tiles;
+    sf::Sprite _BackGround;
+
+    sf::Texture _textSuggestion;
+    sf::Sprite _Suggestion;
+    bool _printSuggest = false;
+
+    sf::RectangleShape _rectWin;
+    sf::Text _textWin;
+    bool _Win;
+    sf::Clock _clock;
 
     bool _playerTurn = true;
     sf::Vector2f _lastSelected;
