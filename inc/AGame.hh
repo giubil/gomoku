@@ -29,6 +29,10 @@ protected:
     std::vector<std::vector<sf::Sprite>> _tiles;
     sf::Sprite _BackGround;
 
+    sf::Texture _textSuggestion;
+    sf::Sprite _Suggestion;
+    bool _printSuggest = false;
+
     sf::RectangleShape _rectWin;
     sf::Text _textWin;
     bool _Win;

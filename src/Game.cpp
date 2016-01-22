@@ -29,6 +29,8 @@ int Game::mainLoop(sf::RenderWindow &window)
 			window.draw(_textNbCapturedPlayer2);
 			window.draw(_textCapturedPlayer1);
 			window.draw(_textCapturedPlayer2);
+            if (_printSuggest)
+                window.draw(_Suggestion);
 		}
         if (_Win)
         {
@@ -90,6 +92,7 @@ int Game::eventsHandling(sf::RenderWindow &window)
 					else
 						_textTurnPlayer.setString("Player Black");
 					done = true;
+                    _printSuggest = false;
                     if (ref.get_winner() != NONE)
                     {
                         _Win = true;

@@ -17,10 +17,12 @@ AGame::AGame()
 		throw (std::runtime_error("Failed to load whitetile texture!"));
 	if (!_textSelectWhite.loadFromFile("./ressources/CaseSelectorWhitev2.png"))
 		throw (std::runtime_error("Failed to load whiteselector texture"));
-		if (!_textSelectBlack.loadFromFile("./ressources/CaseSelectorBlackv2.png"))
+	if (!_textSelectBlack.loadFromFile("./ressources/CaseSelectorBlackv2.png"))
 		throw (std::runtime_error("Failed to load blackselector texture"));
 	if (!_font.loadFromFile("./ressources/OpenSans-Regular.ttf"))
 		throw (std::runtime_error("Failed to load font"));
+	if (!_textSuggestion.loadFromFile("./ressources/SugestionSprite.png"))
+		throw (std::runtime_error("Failed to load sugestion texture"));
 	_BackGround.setTexture(_textBackGround);
 	mem.setPosition(x, y);
 	mem.setTexture(_textTile);
@@ -36,6 +38,7 @@ AGame::AGame()
 		}
 		x += 50;
 	}
+	_Suggestion.setTexture(_textSuggestion);
 	_lastSelected.x = 0;
 	_lastSelected.y = 0;
 	_textPlayer.setFont(_font);
