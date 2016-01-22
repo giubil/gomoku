@@ -53,7 +53,6 @@ int Game::eventsHandling(sf::RenderWindow &window)
     while (!done)
     {
         Map *m = new Map(_map);
-        clock_t tStart = clock();
 		t = _players[p]->play(*m, _ref, window);
         delete m;
         if (t == nullptr)
@@ -62,8 +61,6 @@ int Game::eventsHandling(sf::RenderWindow &window)
 		y = std::get<1>(*t);
 		if (std::get<2>(*t))
 		{
-            printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
 			try {
                 if (_map.get_ref_case(x, y) & (_playerTurn ? DISALLOW_WHITE : DISALLOW_BLACK)
                     || _map.get_occ_case(x, y) != EMPTY)
@@ -93,14 +90,14 @@ int Game::eventsHandling(sf::RenderWindow &window)
 						_textTurnPlayer.setString("Player Black");
 					done = true;
                     _printSuggest = false;
-                    if (ref.get_winner() != NONE)
+                    if (_ref.get_winner() != NONE)
                     {
                         if (!_Win)
                             clock.restart();
                         _Win = true;
-                        if (ref.get_winner() == WHITE_WON)
+                        if (_ref.get_winner() == WHITE_WON)
                             _textWin.setString("White player won !");
-                        else if (ref.get_winner() == BLACK_WON)
+                        else if (_ref.get_winner() == BLACK_WON)
                             _textWin.setString("Black player won !");
                         else
                             _textWin.setString("nobody won !");
