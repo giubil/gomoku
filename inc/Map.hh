@@ -1,5 +1,5 @@
-#ifndef _MAP_HH
-# define _MAP_HH
+#ifndef MAP_HH_
+# define MAP_HH_
 
 #include <iostream>
 #include <cstring>
@@ -34,6 +34,8 @@ private:
 	void check_case_exist(unsigned x, unsigned y) const;
 public:
 	Map();
+    Map(const Map &m);
+    Map &operator=(const Map &);
 	case_type get_occ_case(unsigned int x, unsigned int y) const;
 	void set_occ_case(unsigned int x, unsigned int y, case_type content);
 	void print_occ_map() const;

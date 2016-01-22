@@ -1,5 +1,8 @@
-#include "menu.hh"
-#include "multiPlayers.hh"
+#include "Menu.hh"
+#include "Game.hh"
+
+#include "Player.hh"
+#include "AI.hh"
 
 Menu::Menu()
 {
@@ -16,7 +19,7 @@ int Menu::setWindows(int width, int height)
     return (0);
 }
 
-int Menu::menuLoop(Map &map, Referee &ref)
+int Menu::menuLoop()
 {
   sf::Event event;
   sf::Sprite button1;
@@ -28,6 +31,7 @@ int Menu::menuLoop(Map &map, Referee &ref)
 
   if(!texturemulti.loadFromFile("./ressources/multi.png"))
     {
+<<<<<<< HEAD:src/menu.cpp
       std::cout << "Error load texture Background." << std::endl;
     }
   if(!texturequit.loadFromFile("./ressources/quit.png"))
@@ -76,4 +80,44 @@ int Menu::menuLoop(Map &map, Referee &ref)
   if (Game != NULL)
     Game->mainLoop(map, ref, _window);
   return (0);
+=======
+        while (_window.pollEvent(event))
+        {
+            switch (event.type)
+            {
+              case sf::Event::Closed:
+                _window.close();
+              break;
+              case sf::Event::MouseButtonPressed:
+                  std::cout << "click" << std::endl;
+                  try
+                  {
+                    _game = new Game();
+                    //TODO : menu to choose
+
+                    // temp
+                    _game->setPlayer(0, new Player());
+                    _game->setPlayer(1, new AI());
+                    // !temp
+                  }
+                  catch (std::runtime_error e)
+                  {
+                    std::cout << e.what() << std::endl;
+                  }
+                  closeMenu = true;
+              break;
+              default:
+              break;
+            }
+        }
+        _window.clear();
+        // PRINT SOMETHING HERE
+
+
+        _window.display();
+    }
+    if (_game != nullptr)
+        _game->mainLoop(_window);
+    return (0);
+>>>>>>> 59f32eb5cc209213f682475068cfa8af6c2a15b7:src/Menu.cpp
 }

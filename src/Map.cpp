@@ -1,10 +1,26 @@
 #include <stdexcept>
 #include <sstream>
-#include "map.hh"
+#include "Map.hh"
 
 Map::Map()
 {
 	memset(&_map, 0, sizeof(_map));
+}
+
+Map::Map(const Map &m)
+{
+    for (unsigned i = 0; i < Map::Size; i++)
+    {
+        for (unsigned j = 0; j < Map::Size; j++)
+        {
+            this->_map[i][j] = m._map[i][j];
+        }
+    }
+}
+
+Map &Map::operator=(const Map &m)
+{
+    return *new Map(m);
 }
 
 void Map::check_case_exist(unsigned x, unsigned y) const
@@ -33,7 +49,8 @@ case_type Map::get_occ_case(unsigned int x, unsigned int y) const
 
 void Map::set_occ_case(unsigned int x, unsigned int y, case_type content)
 {
-	check_case_exist(x, y);
+//    std::cout << "map " << this << std::endl;
+    check_case_exist(x, y);
 	_map[x][y].occupancy = content;
 }
 

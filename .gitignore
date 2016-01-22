@@ -2,3 +2,5 @@
 obj
 gomoku
 .tags
+Gomoku.xcodeproj
+test.py
