@@ -95,6 +95,8 @@ int Game::eventsHandling(sf::RenderWindow &window)
                     _printSuggest = false;
                     if (ref.get_winner() != NONE)
                     {
+                        if (!_Win)
+                            clock.restart();
                         _Win = true;
                         if (ref.get_winner() == WHITE_WON)
                             _textWin.setString("White player won !");
@@ -105,7 +107,6 @@ int Game::eventsHandling(sf::RenderWindow &window)
                         _textWin.setOrigin(_textWin.getLocalBounds().width/2.0f,_textWin.getLocalBounds().height/2.0f);
                         _rectWin.setSize(sf::Vector2f(_textWin.getLocalBounds().width + 20, _textWin.getLocalBounds().height + 20));
                         _rectWin.setOrigin(_rectWin.getLocalBounds().width/2.0f,_rectWin.getLocalBounds().height/2.0f);
-                        clock.restart();
                     }
 				}
 			} catch (std::exception) {
