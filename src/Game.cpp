@@ -3,6 +3,10 @@
 Game::Game()
 : _map(*new Map()), _ref(*new Referee(&_map))
 {
+    _ai[0].set_color(APlayer::WHITE);
+    _ai[1].set_color(APlayer::BLACK);
+    _ai[0].set_map(&_map);
+    _ai[1].set_map(&_map);
 }
 
 int Game::mainLoop(sf::RenderWindow &window)

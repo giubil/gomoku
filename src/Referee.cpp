@@ -149,7 +149,7 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
             {
                 for (unsigned i = 1; i < 7; ++i)
                 {
-                    for (unsigned k = 0; k <= 4; ++k)
+                    for (unsigned k = 0; k < 4; ++k)
                     {
                         unsigned j_max = 5 + (i / 2 + ((i % 2) ? 1 : 0));
                         case_type buff_val, color = EMPTY;
