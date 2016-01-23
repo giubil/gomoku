@@ -130,6 +130,7 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
             mutex_kill.unlock();
             window.close();
         }
+        usleep(100);
     }
     thread_play.join();
     return move;
