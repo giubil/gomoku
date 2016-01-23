@@ -44,6 +44,7 @@ int Game::mainLoop(sf::RenderWindow &window)
 
         }
 		window.display();
+        sf::Event event;
 	}
     return (0);
 }
@@ -54,6 +55,8 @@ int Game::eventsHandling(sf::RenderWindow &window)
 	std::tuple<int, int, bool> const *t;
 	std::vector<sf::Vector2i> itemsToClear;
 	bool done = false;
+    
+    // Dismiss unwated events
     while (!done)
     {
         Map *m = new Map(_map);

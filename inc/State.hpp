@@ -62,7 +62,7 @@ class State
                                 ret_moves.clear();
                                 ret_moves.push_back(std::tuple<int, int>(i, J));
                                 _untried_moves = ret_moves;
-                                return ;
+                                return 0;
                             }
                         bool nearby_piece = false;
                         for (int k = -1; k < 2; ++k)
