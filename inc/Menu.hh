@@ -8,7 +8,7 @@ class Menu
 private:
     sf::RenderWindow _window;
     sf::ContextSettings _settings;
-    sf::Event event;
+//    sf::Event event;
     Game *_game;
     bool closeMenu = false;
 
