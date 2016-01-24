@@ -15,12 +15,16 @@ void Game::manage_suggestion()
     while (!_kill_suggestion.try_lock())
     {
         _mutex_suggestion.lock();
+        _suggest_slow = false;
         ai_sugestion.set_color(_playerTurn?(APlayer::WHITE):(APlayer::BLACK));
         ai_sugestion.threaded_play(&move, &buff, &_stop_suggestion, _map, _ref);
         if (_kill_suggestion.try_lock())
             return;
-        else
+        else if (!_suggest_slow)
             setSuggestion(std::get<0>(move), std::get<1>(move));
+        std::cout << (_playerTurn?("WHITE"):("BLACK")) << std::endl;
+        _stop_suggestion.try_lock();
+        _stop_suggestion.unlock();
     }
 }
 
@@ -30,18 +34,14 @@ int Game::mainLoop(sf::RenderWindow &window)
         throw std::runtime_error("player missing");
     _mutex_suggestion.lock();
     _kill_suggestion.lock();
-    _stop_suggestion.lock();
     _thread_suggestion = std::thread(&Game::manage_suggestion, this);
     
     _playerTurn = true;
     bool previous = !_playerTurn;
     while (window.isOpen())
     {
-        if (previous != _playerTurn && _players[_playerTurn?0:1]->get_player_type() == APlayer::PLAYER)
-        {
+        if (previous != _playerTurn && _stop_suggestion.try_lock())
             _mutex_suggestion.unlock();
-            
-        }
         previous = _playerTurn;
         if (!_Win)
             this->eventsHandling(window);
@@ -79,7 +79,6 @@ int Game::mainLoop(sf::RenderWindow &window)
             
         }
         window.display();
-        sf::Event event;
     }
     _mutex_suggestion.unlock();
     _kill_suggestion.unlock();
@@ -99,7 +98,6 @@ int Game::eventsHandling(sf::RenderWindow &window)
     std::tuple<int, int, bool> const *t;
     std::vector<sf::Vector2i> itemsToClear;
     bool done = false;
-    
     // Dismiss unwated events
     while (!done)
     {
@@ -141,6 +139,8 @@ int Game::eventsHandling(sf::RenderWindow &window)
                     else
                         _textTurnPlayer.setString("Player Black");
                     done = true;
+                    _suggest_slow = true;
+                    _stop_suggestion.unlock();
                     _printSuggest = false;
                     if (_ref.get_winner() != NONE)
                     {

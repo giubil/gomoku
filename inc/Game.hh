@@ -16,6 +16,7 @@ protected:
     std::mutex _kill_suggestion;
     std::thread _thread_suggestion;
     std::mutex _stop_suggestion;
+    bool _suggest_slow = false;
     void manage_suggestion();
 public:
     Game();
