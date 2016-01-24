@@ -25,29 +25,36 @@ int Menu::menuLoop()
     sf::Sprite button1;
     sf::Sprite button2;
     sf::Sprite button3;
+    sf::Sprite bg;
     sf::Texture texturemulti;
     sf::Texture textureplay;
     sf::Texture texturequit;
-    
-    if(!texturemulti.loadFromFile("./ressources/multi.png"))
-        throw (std::runtime_error("Error load texture Background."));
-    if(!texturequit.loadFromFile("./ressources/quit.png"))
-        throw (std::runtime_error("Error load texture Background."));
+    sf::Texture background;
+
+    if (!background.loadFromFile("./ressources/background.jpg"))
+      throw (std::runtime_error("Error load texture Background."));
+    if (!texturemulti.loadFromFile("./ressources/multi.png"))
+      throw (std::runtime_error("Error load texture Multiplayer."));
+    if (!texturequit.loadFromFile("./ressources/quit.png"))
+      throw (std::runtime_error("Error load texture Quit."));
     if (!textureplay.loadFromFile("./ressources/play.png"))
-        throw (std::runtime_error("Error load texture Background."));
+      throw (std::runtime_error("Error load texture Play."));
+    bg.setTexture(background);
     button1.setTexture(textureplay);
     button2.setTexture(texturemulti);
     button3.setTexture(texturequit);
-    
+
+    bg.setPosition(sf::Vector2f(-120, 0));
+
     button1.setTextureRect(sf::IntRect(1, 1, 480, 60));
-    button1.setPosition(sf::Vector2f(250, 350));
-    
+    button1.setPosition(sf::Vector2f(350, 350));
+
     button2.setTextureRect(sf::IntRect(1, 1, 480, 60));
-    button2.setPosition(sf::Vector2f(250, 550));
-    
+    button2.setPosition(sf::Vector2f(350, 550));
+
     button3.setTextureRect(sf::IntRect(1, 1, 480, 60));
-    button3.setPosition(sf::Vector2f(250, 750));
-    
+    button3.setPosition(sf::Vector2f(350, 750));
+
     while (_window.isOpen() && closeMenu == false)
     {
         while (_window.pollEvent(event))
@@ -75,6 +82,7 @@ int Menu::menuLoop()
                 _window.close();
         }
         _window.clear();
+	_window.draw(bg);
         _window.draw(button1);
         _window.draw(button2);
         _window.draw(button3);
