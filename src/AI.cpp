@@ -104,7 +104,10 @@ void AI::threaded_play(std::tuple<int, int, bool> *move, std::mutex *mutex, std:
     /*for (auto it = rootnode.get_childs().begin(); it != rootnode.get_childs().end(); ++it)
      (*it)->print_node();*/
     rootnode.tree_to_string(0);
-    buff_move = rootnode.get_most_visited()->get_move();
+    if (rootnode.get_most_visited() == nullptr)
+        buff_move = std::tuple<int, int>(9,9);
+    else
+        buff_move = rootnode.get_most_visited()->get_move();
     std::cout << "Returned x = " << std::get<0>(buff_move) << " y = " << std::get<1>(buff_move) << std::endl;
     std::get<0>(*move) = std::get<0>(buff_move);
     std::get<1>(*move) = std::get<1>(buff_move);
@@ -140,4 +143,9 @@ std::tuple<int, int, bool> const * AI::play(Map const &map, Referee &ref, sf::Re
 void AI::set_color(player_color c)
 {
     APlayer::set_color(c);
+}
+
+APlayer::player_type AI::get_player_type() const
+{
+    return player_type::AI;
 }

@@ -9,11 +9,12 @@
 #include "Node.hh"
 
 class AI : public APlayer {
-    void threaded_play(std::tuple<int, int, bool> *move, std::mutex *mutex, std::mutex *mutex_kill, Map const map, Referee ref) const;
 public:
+    void threaded_play(std::tuple<int, int, bool> *move, std::mutex *mutex, std::mutex *mutex_kill, Map const map, Referee ref) const;
     AI();
     virtual std::tuple<int, int, bool> const * play(Map const &map, Referee &ref, sf::RenderWindow &window) const;
     void set_color(player_color c);
+    virtual player_type get_player_type() const;
 };
 
 #endif /* !AI_HH_ */

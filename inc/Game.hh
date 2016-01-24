@@ -1,6 +1,7 @@
 #ifndef GAME_HH_
 #define GAME_HH_
-
+#include <thread>
+#include <mutex>
 #include "AGame.hh"
 #include "APlayer.hh"
 #include "AI.hh"
@@ -10,9 +11,12 @@ protected:
     APlayer *_players[2];
     Map &_map;
     Referee &_ref;
-    std::mutex _sugestion_done;
-    std::mutex _stop_sugestion;
-    AI _ai[2];
+    APlayer::player_color _suggestion_color;
+    std::mutex _mutex_suggestion;
+    std::mutex _kill_suggestion;
+    std::thread _thread_suggestion;
+    std::mutex _stop_suggestion;
+    void manage_suggestion();
 public:
     Game();
     void setWindows(int width, int height);
