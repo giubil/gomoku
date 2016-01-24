@@ -33,14 +33,16 @@ template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_play
 }
 
 State::State(Map *map, APlayer::player_color whose_turn, Referee *ref)
-: _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE)
+: _map(map), _ref(ref), _whose_turn(whose_turn), _won(player_won::NONE), _depth(0)
 {
+    _depth = 0;
     _ref->feed_map(map);
+    //_buff_map = new Map(_map);
     update_moves();
 }
 
 State::State(const State &s)
-: _map(new Map(*s._map)), _ref(new Referee(*s._ref)), _whose_turn(s._whose_turn), _won(s._won)
+: _map(new Map(*s._map)), _ref(new Referee(*s._ref)), _whose_turn(s._whose_turn), _won(s._won), _depth(s._depth)
 {
     _ref->feed_map(_map);
     update_moves();
@@ -65,8 +67,12 @@ void State::update_moves()
 
     if (_ref->get_winner() != player_won::NONE)
     {
-        /*std::cout << "I won" << std::endl;
-        _map->print_occ_map();*/
+        /*std::cout << _ref->get_winner() << " won" << std::endl;
+        std::cout << "My map" << std::endl;
+        _map->print_occ_map();
+        std::cout << "Ref map" << std::endl;
+        _ref->get_map()->print_occ_map();*/
+        //_ref->print_captured();
         _won = _ref->get_winner();
         _untried_moves = ret_moves;
         return ;
@@ -89,6 +95,7 @@ void State::do_move(std::tuple<int, int> move)
     _won = _ref->get_winner();
     _whose_turn = _whose_turn == APlayer::player_color::WHITE ? APlayer::player_color::BLACK : APlayer::player_color::WHITE;
     //_tried_moves = std::list<std::tuple<int, int>>();
+    _depth += 1;
     update_moves();
 }
 
@@ -122,3 +129,5 @@ void State::print_map() const
     _map->print_occ_map();
 }
 std::list<std::tuple<int, int>> State::get_untried_moves() { return (_untried_moves);}
+unsigned State::get_depth() const { return (_depth);}
+Referee *State::get_ref() const { return (_ref);}

@@ -3,12 +3,16 @@
 
 #include "AGame.hh"
 #include "APlayer.hh"
+#include "AI.hh"
 
 class Game : public AGame {
 protected:
     APlayer *_players[2];
     Map &_map;
     Referee &_ref;
+    std::mutex _sugestion_done;
+    std::mutex _stop_sugestion;
+    AI _ai[2];
 public:
     Game();
     void setWindows(int width, int height);

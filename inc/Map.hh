@@ -18,11 +18,17 @@ enum case_ref_type
 	DISALLOW_BLACK = 2
 };
 
+enum case_ref_winning
+{
+	NONE_WINNING = 0,
+	WHITE_WINNING = 1,
+	BLACK_WINNING = 2
+};
+
 typedef struct __attribute__((__packed__)) case_field {
-	std::uint32_t data_black : 30;
-	std::uint32_t data_white : 30;
 	case_type occupancy : 2;
 	case_ref_type referee : 2;
+	case_ref_winning winning : 2;
 } case_field;
 
 class Map
@@ -41,8 +47,9 @@ public:
 	void print_occ_map() const;
 	case_ref_type get_ref_case(unsigned int x, unsigned int y) const;
 	void set_ref_case(unsigned int x, unsigned int y, case_ref_type content);
-	std::uint32_t get_AI_data(unsigned x, unsigned y, case_type c) const;
-	void set_AI_data(unsigned x, unsigned y, case_type c, std::uint32_t value);
+	case_ref_winning get_ref_winning(unsigned int x, unsigned int y) const;
+	void set_ref_winning(unsigned int x, unsigned int y, case_ref_winning content);
+
 };
 
 #endif

@@ -23,11 +23,11 @@ Referee &Referee::operator=(const Referee &r)
     return (*new Referee(r));
 }
 
-bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2] ,unsigned int x, unsigned int y) const
+bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2] ,unsigned int x, unsigned int y)
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned int buff_x, buff_y;
-    
+
     for (int i = 0; i < 8; ++i)
     {
         if (i % 4 != direction % 4)
@@ -49,16 +49,17 @@ bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_t
     return (false);
 }
 
-player_won Referee::five_in_a_row() const
+player_won Referee::five_in_a_row()
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned int buff_x, buff_y, buff_val;
     bool is_breakable;
     size_t size_five, j;
-    
+
     for (unsigned int x = 0; x < Map::Size; ++x)
         for (unsigned int y = 0; y < Map::Size; ++y)
         {
+            _map->set_ref_winning(x, y, case_ref_winning::NONE_WINNING);
             buff_val = _map->get_occ_case(x, y);
             if (buff_val != case_type::EMPTY)
             {
@@ -83,10 +84,10 @@ player_won Referee::five_in_a_row() const
                     if (j == 5)
                     {
                         is_breakable = false;
-                        for (j = 0; j < 5; j++)
+                        for (int k = 0; k < 5; k++)
                         {
-                            buff_x = x + (tab_buff[i][0] * j);
-                            buff_y = y + (tab_buff[i][1] * j);
+                            buff_x = x + (tab_buff[i][0] * k);
+                            buff_y = y + (tab_buff[i][1] * k);
                             if (find_pattern(i, pattern_tab, pattern_tab_inv, buff_x, buff_y))
                                 is_breakable = true;
                         }
@@ -94,7 +95,27 @@ player_won Referee::five_in_a_row() const
                         {
                             return ((buff_val == case_type::WHITE) ? player_won::WHITE_WON : player_won::BLACK_WON);
                         }
-                        
+                    }
+                    else if (j == 4)
+                    {
+                        is_breakable = false;
+/*                        for (int k = 0; k < 4; ++k)
+                        {
+                            buff_x = x + (tab_buff[i][0] * k);
+                            buff_y = y + (tab_buff[i][1] * k);
+                            if (find_pattern(i, pattern_tab, pattern_tab_inv, buff_x, buff_y))
+                                is_breakable = true;
+                        }*/
+                        buff_x = x + (tab_buff[i][0] * -1);
+                        buff_y = y + (tab_buff[i][1] * -1);
+                        //std::cout << "-1 tab buff x = " << buff_x << " y = " << buff_y;
+                        if (!(buff_x >= Map::Size || buff_y >= Map::Size))
+                            _map->set_ref_winning(buff_x, buff_y, (buff_val == case_type::WHITE) ? case_ref_winning::WHITE_WINNING : case_ref_winning::BLACK_WINNING);
+                        buff_x = x + (tab_buff[i][0] * 4);
+                        buff_y = y + (tab_buff[i][1] * 4);
+                        //std::cout << " 5 tab buff x = " << buff_x << "y = " << buff_y << std::endl;
+                        if (!(buff_x >= Map::Size || buff_y >= Map::Size))
+                            _map->set_ref_winning(buff_x, buff_y, (buff_val == case_type::WHITE) ? case_ref_winning::WHITE_WINNING : case_ref_winning::BLACK_WINNING);
                     }
                 }
             }
@@ -117,7 +138,7 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
     max_y = last_y + 5>Map::Size?(Map::Size-1):(last_y+5),
     min_x = last_x - 5>Map::Size?1:(last_x-5),
     min_y = last_y - 5>Map::Size?1:(last_y-5);
-    
+
     for (unsigned x = min_x; x < max_x; ++x)
     {
         for (unsigned y = min_y; y < max_y; ++y)
@@ -128,7 +149,7 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
             {
                 for (unsigned i = 1; i < 7; ++i)
                 {
-                    for (unsigned k = 0; k <= 4; ++k)
+                    for (unsigned k = 0; k < 4; ++k)
                     {
                         unsigned j_max = 5 + (i / 2 + ((i % 2) ? 1 : 0));
                         case_type buff_val, color = EMPTY;
@@ -171,7 +192,7 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned buff_x, buff_y;
     case_type color = _map->get_occ_case(x, y);
-    
+
     _to_clean.clear();
     if (color == EMPTY)
         return;
@@ -219,4 +240,15 @@ player_won Referee::get_winner() const
 std::vector<sf::Vector2i> &Referee::get_to_clean()
 {
     return _to_clean;
+}
+
+void Referee::print_captured() const
+{
+    std::cout << "White : " << _captured[0] << " Black : " << _captured[1] << std::endl;
+}
+
+Map *Referee::get_map() const { return (_map);}
+unsigned Referee::get_captured(int color) const
+{
+    return (_captured[color]);
 }
