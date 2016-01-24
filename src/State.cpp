@@ -17,7 +17,7 @@ template <> int State::first_nearby_loop<2>(bool *nearby_piece, size_t i, size_t
   return(2);
 }
 
-template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int, int>>& ret_moves)
 {
   (void)buff_player;
   (void)i;
@@ -25,7 +25,7 @@ template<> int State::second_map_loop<Map::Size>(int i, APlayer::player_color& b
   return (Map::Size);
 }
 
-template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+template<> int State::first_map_loop<Map::Size>(APlayer::player_color& buff_player, std::list<std::tuple<int, int, int>>& ret_moves)
 {
   (void)buff_player;
   (void)ret_moves;
@@ -62,8 +62,8 @@ State::~State()
 void State::update_moves()
 {
     APlayer::player_color buff_player;
-    std::list<std::tuple<int, int>> ret_moves;
-    std::list<std::tuple<int, int>>::iterator end;
+    std::list<std::tuple<int, int, int>> ret_moves;
+    std::list<std::tuple<int, int, int>>::iterator end;
 
     if (_ref->get_winner() != player_won::NONE)
     {
@@ -82,12 +82,12 @@ void State::update_moves()
     //std::cout << "Updated moves with size = " << ret_moves.size() << std::endl;
 }
 
-std::list<std::tuple<int, int>> State::get_moves()
+int State::get_moves_size() const
 {
-    return (_untried_moves);
+    return (_untried_moves.size());
 }
 
-void State::do_move(std::tuple<int, int> move)
+void State::do_move(std::tuple<int, int, int> move)
 {
     _map->set_occ_case(std::get<0>(move), std::get<1>(move), (_whose_turn == APlayer::WHITE ? case_type::WHITE : case_type::BLACK));
     _ref->feed_map(_map);
@@ -104,20 +104,30 @@ player_won  State::get_results()
     return (_won);
 }
 
-std::tuple<int, int> State::get_random_move()
+std::tuple<int, int, int> State::get_random_move()
 {
-    std::list<std::tuple<int, int>> buff_moves = get_moves();
+    std::list<std::tuple<int, int, int>>::iterator it = _untried_moves.begin();
+    unsigned total_weight = 0;
+    unsigned rand_chosen;
 
-    std::list<std::tuple<int, int>>::iterator it = buff_moves.begin();
-
-    std::advance(it, std::rand() % buff_moves.size());
+    for (; it != _untried_moves.end(); ++it)
+        total_weight += std::get<2>(*it);
+    rand_chosen = std::rand() % total_weight;
+    total_weight = 0;
+    for (it = _untried_moves.begin(); it != _untried_moves.end(); ++it)
+    {
+        total_weight += std::get<2>(*it);
+        if (total_weight > rand_chosen)
+            break;
+    }
+    // std::advance(it, std::rand() % _untried_moves.size());
     _tried_moves.push_back(*it);
     _untried_moves.remove(*it);
     //update_moves();
     return (*it);
 }
 
-void State::push_tried_move(std::tuple<int, int> move)
+void State::push_tried_move(std::tuple<int, int, int> move)
 {
     _tried_moves.push_back(move);
 }
@@ -128,6 +138,5 @@ void State::print_map() const
 {
     _map->print_occ_map();
 }
-std::list<std::tuple<int, int>> State::get_untried_moves() { return (_untried_moves);}
 unsigned State::get_depth() const { return (_depth);}
 Referee *State::get_ref() const { return (_ref);}

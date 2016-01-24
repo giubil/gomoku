@@ -1,6 +1,6 @@
 #include "Node.hh"
 
-Node::Node(State *state, Node *parent, std::tuple<int, int> *move) : _parent(parent),  _wins(0), _visits(0), _state(state), _move(move)
+Node::Node(State *state, Node *parent, std::tuple<int, int, int> *move) : _parent(parent),  _wins(0), _visits(0), _state(state), _move(move)
 {
 }
 
@@ -16,9 +16,9 @@ Node::~Node()
   }
 }
 
-Node *Node::create_children(std::tuple<int, int> move, State *state)
+Node *Node::create_children(std::tuple<int, int, int> move, State *state)
 {
-    Node    *child_node = new Node(new State(*state), this, new std::tuple<int, int>(move));
+    Node    *child_node = new Node(new State(*state), this, new std::tuple<int, int, int>(move));
 
     _state->push_tried_move(move);
     _child_list.push_back(child_node);
@@ -45,7 +45,7 @@ Node *Node::get_UTC_children()
 
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
     {
-        double buff_val = ((double)(*it)->_wins) / ((double)(*it)->_visits * 2.0)
+        double buff_val = (double)(std::get<2>(*((*it)->_move))) * ((double)(*it)->_wins) / ((double)(*it)->_visits * 2.0)
         + sqrt(2 * log((double)(*it)->_parent->_visits * 2.0) / ((double)(*it)->_visits * 2.0));
         if ((*it)->_wins >= 0 && buff_val > best_value)
         {
@@ -75,8 +75,6 @@ Node *Node::get_UTC_children()
 
 void Node::update(int result, bool set_visits)
 {
-    if (result < -10000 || result > 100)
-        std::cout << "Result = " << result;
     if (set_visits)
         _visits = 0;
     else
@@ -90,43 +88,41 @@ int     Node::get_visits() const { return (_visits);}
 int     Node::get_wins() const { return (_wins);}
 Node    *Node::get_parent() const { return (_parent);}
 State   *Node::get_state() const { return (_state);}
-const std::list<Node *> &Node::get_childs() const { return (_child_list);}
-std::tuple<int, int> Node::get_move() const
+std::list<Node *> &Node::get_childs() { return (_child_list);}
+std::tuple<int, int, int> Node::get_move() const
 {
     return (*_move);
 }
 
 Node *Node::get_most_visited()
 {
-/*    std::cout << "Before" << std::endl;
+    std::cout << "Before" << std::endl;
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
     {
-        std::cout << "[M:[" << std::get<0>(*((*it)->_move)) << ";" << std::get<1>(*((*it)->_move)) << "] W/V:" << (*it)->_wins << "/" << (*it)->_visits << " U:" << (*it)->_state->get_untried_moves().size() << std::endl;
-    }*/
+        (*it)->print_node();
+    }
     if (!std::all_of(_child_list.begin(), _child_list.end(), [](const Node *a){
-        return (a->get_wins() < 0);
+        return (a->get_wins() < -500);
     }))
         _child_list.remove_if([](const Node *a){
-            if (a->get_wins() < 0)
+            if (a->get_wins() < -500)
                 return (true);
             return (false);
         });
     std::cout << "After removing neg" << std::endl;
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
     {
-        std::cout << "[M:[" << std::get<0>(*((*it)->_move)) << ";" << std::get<1>(*((*it)->_move)) << "] W/V:" << (*it)->_wins << "/" << (*it)->_visits << " U:" << (*it)->_state->get_untried_moves().size() << std::endl;
+        (*it)->print_node();
     }
     _child_list.sort([](const Node *a, const Node *b){
-        /*if ((double)a->get_visits() / (double)a->get_wins()
-            > (double)b->get_visits() / (double)b->get_visits())*/
-        if (/*(double)a->get_wins() / */(double)a->get_visits() > /*(double)b->get_wins() /*/ (double)b->get_visits())
+        if ((double)a->get_visits() + std::get<2>(*(a->_move))  >  (double)b->get_visits() + std::get<2>(*(b->_move)))
             return (true);
         return (false);
     });
     std::cout << "Node list : " << std::endl;
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
     {
-        std::cout << "[M:[" << std::get<0>(*((*it)->_move)) << ";" << std::get<1>(*((*it)->_move)) << "] W/V:" << (*it)->_wins << "/" << (*it)->_visits << " U:" << (*it)->_state->get_untried_moves().size() << std::endl;
+        (*it)->print_node();
     }
     return (_child_list.front());
 }
@@ -134,9 +130,9 @@ Node *Node::get_most_visited()
 void Node::print_node()
 {
     if (_move == nullptr)
-        std::cout << "[M:[N/A] W/V:" << _wins <<    "/" << _visits << " U:" << _state->get_untried_moves().size() << std::endl;
+        std::cout << "[M:[N/A] W/V:" << _wins <<    "/" << _visits << " U:" << _state->get_moves_size() << std::endl;
     else
-        std::cout << "[M:[" << std::get<0>(*_move) << ";" << std::get<1>(*_move) << "] W/V:" << _wins << "/" << _visits << " U:" << _state->get_untried_moves().size() << std::endl;
+        std::cout << "[M:[" << std::get<0>(*_move) << ";" << std::get<1>(*_move) << "] W/V:" << _wins << "/" << _visits << " U:" << _state->get_moves_size() << " W:" << std::get<2>(*_move) << "]" << std::endl;
 }
 
 void Node::tree_to_string(int indent)
@@ -149,4 +145,18 @@ void Node::tree_to_string(int indent)
     }
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
         (*it)->tree_to_string(indent + 1);
+}
+
+Node *Node::get_first_child()
+{
+    Node *buff = this;
+
+    while (buff->_parent->_parent != nullptr)
+        buff = buff->_parent;
+    return (buff);
+}
+
+void Node::set_wins(int wins)
+{
+    _wins = wins;
 }

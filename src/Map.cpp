@@ -77,6 +77,50 @@ void Map::print_occ_map() const
 	}
 }
 
+void Map::print_weighted_map() const
+{
+	for (size_t y = 0; y < Map::Size; ++y)
+	{
+		for (size_t x = 0; x < Map::Size; ++x)
+		{
+//			if (get_occ_case(x, y) == EMPTY)
+				switch (get_ref_winning(x, y))
+				{
+				case NONE_WINNING:
+					std::cout << "-";
+					break;
+				case WHITE_WINNING:
+					std::cout << "w";
+					break;
+				case BLACK_WINNING:
+					std::cout << "b";
+					break;
+				case BLACK_POSSIBLE:
+					std::cout << "B";
+					break;
+				case WHITE_POSSIBLE:
+					std::cout << "W";
+					break;
+				}
+			// else
+			// 	switch (get_occ_case(x, y))
+			// 	{
+			// 	case EMPTY:
+			// 		std::cout << "-";
+			// 		break;
+			// 	case WHITE:
+			// 		std::cout << "O";
+			// 		break;
+			// 	case BLACK:
+			// 		std::cout << "X";
+			// 		break;
+			// 	}
+
+		}
+		std::cout << std::endl;
+	}
+}
+
 void Map::set_ref_case(unsigned int x, unsigned int y, case_ref_type content)
 {
 	check_case_exist(x, y);

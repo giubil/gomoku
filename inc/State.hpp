@@ -14,8 +14,8 @@ class State
     Referee                         *_ref;
     APlayer::player_color           _whose_turn;
     player_won                      _won;
-    std::list<std::tuple<int, int>> _tried_moves;
-    std::list<std::tuple<int, int>> _untried_moves;
+    std::list<std::tuple<int, int, int>> _tried_moves;
+    std::list<std::tuple<int, int, int>> _untried_moves;
     unsigned                        _depth;
     void update_moves();
     template <int L> int second_nearby_loop(bool *nearby_piece, size_t i, size_t j, int k)
@@ -42,9 +42,10 @@ class State
       else
         return (2);
     };
-    template <int J>int second_map_loop(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+    template <int J>int second_map_loop(int i, APlayer::player_color& buff_player, std::list<std::tuple<int, int, int>>& ret_moves)
     {
-      std::list<std::tuple<int, int>>::iterator end;
+      std::list<std::tuple<int, int, int>>::iterator end;
+      case_ref_winning buff_color;
       if (J < Map::Size)
       {
         if (_map->get_occ_case(i, J) == case_type::EMPTY)
@@ -54,33 +55,41 @@ class State
             if ((buff_player == APlayer::WHITE && buff_ref != DISALLOW_WHITE)
                 || (buff_player == APlayer::BLACK && buff_ref != DISALLOW_BLACK))
                 {
-                    if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int>(i ,J)) != _tried_moves.end()))
+                    if (!(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int, int>(i ,J, 1)) != _tried_moves.end()) && !(std::find(_tried_moves.begin(), _tried_moves.end(), std::tuple<int, int, int>(i ,J, 100)) != _tried_moves.end()))
                     {
-                        if (_map->get_ref_winning(i, J) == (buff_player == APlayer::WHITE ?                   case_ref_winning::WHITE_WINNING : case_ref_winning::BLACK_WINNING)
-                        || _map->get_ref_winning(i, J) == (buff_player == APlayer::WHITE ? case_ref_winning::BLACK_WINNING : case_ref_winning::WHITE_WINNING))
-                            {
-                                ret_moves.clear();
-                                ret_moves.push_back(std::tuple<int, int>(i, J));
-                                _untried_moves = ret_moves;
-                                return 0;
-                            }
-                        bool nearby_piece = false;
-                        for (int k = -1; k < 2; ++k)
-                            for (int l = -1; l < 2; ++l)
-                            {
-                                unsigned buff_x = i + k;
-                                unsigned buff_y = J + l;
-                                if (buff_x < Map::Size && buff_y < Map::Size
-                                    && !(k == 0 && l == 0)
-                                    && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY)
+                        buff_color = _map->get_ref_winning(i, J);
+                        if (buff_color == WHITE_WINNING || buff_color == BLACK_WINNING)
+                        {
+                            ret_moves.push_back(std::tuple<int, int, int>(i, J, 1000));
+                        }
+                        else if (buff_color != NONE_WINNING)
+                        {
+                            if ((buff_color == WHITE_POSSIBLE && _whose_turn == APlayer::player_color::WHITE)
+                            || (buff_color == BLACK_POSSIBLE && _whose_turn == APlayer::player_color::BLACK))
+                                ret_moves.push_back(std::tuple<int, int, int>(i, J, 200));
+                            else
+                                ret_moves.push_back(std::tuple<int, int, int>(i, J, 100));
+                        }
+                        else
+                        {
+                            bool nearby_piece = false;
+                            for (int k = -1; k < 2; ++k)
+                                for (int l = -1; l < 2; ++l)
                                 {
-                                    nearby_piece = true;
-                                    k = 2;
-                                    l = 2;
+                                    unsigned buff_x = i + k;
+                                    unsigned buff_y = J + l;
+                                    if (buff_x < Map::Size && buff_y < Map::Size
+                                        && !(k == 0 && l == 0)
+                                        && _map->get_occ_case(buff_x, buff_y) != case_type::EMPTY)
+                                    {
+                                        nearby_piece = true;
+                                        k = 2;
+                                        l = 2;
+                                    }
                                 }
-                            }
-                        if (nearby_piece)
-                            ret_moves.push_back(std::tuple<int, int>(i, J));
+                            if (nearby_piece)
+                                ret_moves.push_back(std::tuple<int, int, int>(i, J, 1));
+                        }
                     }
                 }
         }
@@ -89,11 +98,12 @@ class State
       else
         return (Map::Size);
     };
-    template <int I>int first_map_loop(APlayer::player_color& buff_player, std::list<std::tuple<int, int>>& ret_moves)
+    template <int I>int first_map_loop(APlayer::player_color& buff_player, std::list<std::tuple<int, int, int>>& ret_moves)
     {
       if (I < Map::Size)
       {
-        second_map_loop<0>(I, buff_player, ret_moves);
+        if ((unsigned)second_map_loop<0>(I, buff_player, ret_moves) > Map::Size)
+            return (Map::Size);
         return (first_map_loop<I + 1>(buff_player, ret_moves));
       }
       else
@@ -105,16 +115,15 @@ public:
     State(const State&);
     State &operator=(const State&);
     ~State();
-    std::list<std::tuple<int, int>> get_moves();
-    void do_move(std::tuple<int, int> move);
+    void do_move(std::tuple<int, int, int> move);
     player_won  get_results();
-    std::tuple<int, int> get_random_move();
+    std::tuple<int, int, int> get_random_move();
     APlayer::player_color get_turn() const;
-    void push_tried_move(std::tuple<int, int> move);
-    std::list<std::tuple<int, int>> get_untried_moves();
+    void push_tried_move(std::tuple<int, int, int> move);
     void print_map() const;
     unsigned get_depth() const;
     Referee *get_ref() const;
+    int get_moves_size() const;
 };
 
 #endif /* !STATE_HPP_ */

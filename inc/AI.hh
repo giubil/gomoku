@@ -8,6 +8,9 @@
 #include "State.hpp"
 #include "Node.hh"
 
+# define MAX_DEPTH 20
+# define ITER_MAX 1024
+
 class AI : public APlayer {
 public:
     void threaded_play(std::tuple<int, int, bool> *move, std::mutex *mutex, std::mutex *mutex_kill, Map const map, Referee ref) const;

@@ -22,13 +22,15 @@ enum case_ref_winning
 {
 	NONE_WINNING = 0,
 	WHITE_WINNING = 1,
-	BLACK_WINNING = 2
+	BLACK_WINNING = 2,
+	WHITE_POSSIBLE = 3,
+	BLACK_POSSIBLE = 4
 };
 
 typedef struct __attribute__((__packed__)) case_field {
 	case_type occupancy : 2;
 	case_ref_type referee : 2;
-	case_ref_winning winning : 2;
+	case_ref_winning winning : 3;
 } case_field;
 
 class Map
@@ -49,6 +51,7 @@ public:
 	void set_ref_case(unsigned int x, unsigned int y, case_ref_type content);
 	case_ref_winning get_ref_winning(unsigned int x, unsigned int y) const;
 	void set_ref_winning(unsigned int x, unsigned int y, case_ref_winning content);
+	void print_weighted_map() const;
 
 };
 
