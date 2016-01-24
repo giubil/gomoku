@@ -41,11 +41,16 @@ int Game::mainLoop(sf::RenderWindow &window)
                 window.close();
                 return (0);
             }
-            
+
         }
 		window.display();
 	}
     return (0);
+}
+void Game::setSuggestion(int x, int y)
+{
+    _Suggestion.setPosition(x * 50, y * 50);
+    _printSuggest = true;
 }
 
 int Game::eventsHandling(sf::RenderWindow &window)
