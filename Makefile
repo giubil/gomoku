@@ -1,14 +1,19 @@
 CXX		= g++
 
 NAME	= gomoku
+UNAME_S := $(shell uname -s)
 
 RM		= rm -rf
 MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
 CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3 -flto
-LDFLAGS     =  -pthread
-LDFLAGS     =  -O3 -flto
+
+ifeq ($(UNAME_S),Linux)
+    LDFLAGS     =  -pthread
+endif
+
+LDFLAGS     +=  -O3 -flto
 
 # LDFLAGS		= -ldl -pthread
 # LDFLAGS		+= -L./lib
