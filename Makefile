@@ -6,8 +6,9 @@ RM		= rm -rf
 MKDIR	= mkdir -p
 
 CXXFLAGS	+= -I./$(INC_PATH)
-CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3
+CXXFLAGS	+= -Wall -Wextra -W -std=c++14 -O3 -flto
 LDFLAGS     =  -pthread
+LDFLAGS     =  -O3 -flto
 
 # LDFLAGS		= -ldl -pthread
 # LDFLAGS		+= -L./lib
