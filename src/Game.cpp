@@ -40,7 +40,8 @@ int Game::mainLoop(sf::RenderWindow &window)
     bool previous = !_playerTurn;
     while (window.isOpen())
     {
-        if (previous != _playerTurn && _stop_suggestion.try_lock())
+        if (previous != _playerTurn && _stop_suggestion.try_lock()
+            && _players[_playerTurn?0:1]->get_player_type() == APlayer::PLAYER)
             _mutex_suggestion.unlock();
         previous = _playerTurn;
         if (!_Win)

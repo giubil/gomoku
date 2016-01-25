@@ -22,6 +22,7 @@ private:
 	unsigned _captured[2];
     player_won five_in_a_row();
     bool find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_tab_inv)[2], unsigned int x, unsigned int y);
+    void set_ref_winning_for_four() const;
 public:
 	Referee(Map *map);
     Referee(const Referee &);

@@ -27,7 +27,7 @@ bool Referee::find_pattern(int direction, int (*pattern_tab)[2], int (*pattern_t
 {
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned int buff_x, buff_y;
-
+    
     for (int i = 0; i < 8; ++i)
     {
         if (i % 4 != direction % 4)
@@ -63,8 +63,8 @@ player_won Referee::five_in_a_row()
     unsigned int buff_x, buff_y, buff_val;
     bool is_breakable;
     size_t size_five, j;
-
-
+    
+    
     for (unsigned int x = 0; x < Map::Size; ++x)
         for (unsigned int y = 0; y < Map::Size; ++y)
         {
@@ -121,7 +121,7 @@ player_won Referee::five_in_a_row()
                         buff_y = y + (tab_buff[i][1] * 4);
                         if (!(buff_x >= Map::Size || buff_y >= Map::Size))
                             _map->set_ref_winning(buff_x, buff_y, (buff_val == case_type::WHITE) ? case_ref_winning::WHITE_WINNING : case_ref_winning::BLACK_WINNING);
-
+                        
                     }
                     else if (j == 3)
                     {
@@ -146,6 +146,83 @@ player_won Referee::five_in_a_row()
     return (player_won::NONE);
 }
 
+void Referee::set_ref_winning_for_four() const
+{
+    int tab_patern[][5] = {{2, 0, 2},
+        {0, 2, 2},
+        {2, 0, 2, 2}};
+    int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
+    unsigned buff_x, buff_y;
+    
+    for (unsigned x = 0; x < Map::Size; ++x)
+    {
+        for (unsigned y = 0; y < Map::Size; ++y)
+        {
+            case_type color = _map->get_occ_case(x, y);
+            if (color != EMPTY)
+            {
+                for (unsigned k = 1; k < 7; ++k)
+                {
+                    for (unsigned i = 0; i < 3; ++i)
+                    {
+                        if (i < 2)
+                        {
+                            unsigned j = 0;
+                            for (; j < 3; ++j)
+                            {
+                                buff_x = x + (tab_buff[k][0] * (j + 1));
+                                buff_y = y + (tab_buff[k][1] * (j + 1));
+                                if (buff_x >= Map::Size || buff_y >= Map::Size)
+                                    break;
+                                case_type buff_val = _map->get_occ_case(buff_x, buff_y);
+                                if ((tab_patern[i][j] == 2 && buff_val != color)
+                                    || (tab_patern[i][j] == 0 && buff_val != EMPTY))
+                                    break;
+                            }
+                            if (j == 3)
+                            {
+                                case_ref_winning buff = _map->get_ref_winning(x + (tab_buff[k][0] * 2), y + (tab_buff[k][1] * 2));
+                                if (i == 0 && buff == NONE_WINNING)
+                                {
+                                    _map->set_ref_winning(x + (tab_buff[k][0] * 2), y + (tab_buff[k][1] * 2), (color == WHITE)?WHITE_POSSIBLE:BLACK_POSSIBLE);
+                                }
+                                buff = _map->get_ref_winning(x + (tab_buff[k][0]), y + (tab_buff[k][1]));
+                                if (i == 1 && buff == NONE_WINNING)
+                                {
+                                    
+                                    _map->set_ref_winning(x + (tab_buff[k][0]), y + (tab_buff[k][1]), (color == WHITE)?WHITE_POSSIBLE:BLACK_POSSIBLE);
+                                }
+                            }
+                        }
+                        else if (i == 2)
+                        {
+                            unsigned j = 0;
+                            for (; j < 4; ++j)
+                            {
+                                buff_x = x + (tab_buff[k][0] * (j + 1));
+                                buff_y = y + (tab_buff[k][1] * (j + 1));
+                                if (buff_x >= Map::Size || buff_y >= Map::Size)
+                                    break;
+                                case_type buff_val = _map->get_occ_case(buff_x, buff_y);
+                                if ((tab_patern[i][j] == 2 && buff_val != color)
+                                    || (tab_patern[i][j] == 0 && buff_val == color))
+                                    break;
+                            }
+                            if (j == 4)
+                            {
+                                _map->set_ref_winning(x + (tab_buff[k][0] * 2), y + (tab_buff[k][1] * 2), (color == WHITE)?WHITE_WINNING:BLACK_WINNING);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
 {
     int tab_patern[][9] = {{1, 2, 2, 1, 1, 1, 0, 0, 0},
@@ -161,7 +238,7 @@ void Referee::set_disallowed(unsigned last_x, unsigned last_y) const
     max_y = last_y + 5>Map::Size?(Map::Size-1):(last_y+5),
     min_x = last_x - 5>Map::Size?1:(last_x-5),
     min_y = last_y - 5>Map::Size?1:(last_y-5);
-
+    
     for (unsigned x = min_x; x < max_x; ++x)
     {
         for (unsigned y = min_y; y < max_y; ++y)
@@ -215,7 +292,7 @@ void Referee::remove_capture_pieces(unsigned x, unsigned y)
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned buff_x, buff_y;
     case_type color = _map->get_occ_case(x, y);
-
+    
     _to_clean.clear();
     if (color == EMPTY)
         return;
@@ -259,6 +336,7 @@ void Referee::calc(unsigned x, unsigned y)
     remove_capture_pieces(x, y);
     _result = five_in_a_row();
     set_disallowed(x, y);
+    set_ref_winning_for_four();
 }
 
 player_won Referee::get_winner() const
