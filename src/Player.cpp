@@ -31,7 +31,7 @@ std::tuple<int, int, bool> const * Player::play(Map const &map, Referee &ref, sf
     return (nullptr);
 }
 
-APlayer::player_type Player::get_player_type() const
+Player::player_type Player::get_player_type() const
 {
     return player_type::PLAYER;
 }
