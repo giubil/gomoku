@@ -96,34 +96,37 @@ std::tuple<int, int, int> Node::get_move() const
 
 Node *Node::get_most_visited()
 {
-    std::cout << "Before" << std::endl;
+    // std::cout << "Before" << std::endl;
     for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
-    {
-        (*it)->print_node();
-    }
+        if ((*it)->get_childs().size() == 0 && (*it)->get_state()->get_moves_size() == 0)
+            return (*it);
+    // for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
+    // {
+    //     (*it)->print_node();
+    // }
     if (!std::all_of(_child_list.begin(), _child_list.end(), [](const Node *a){
-        return (a->get_wins() < -500);
+        return (a->get_wins() < -500 - std::get<2>(a->get_move()));
     }))
         _child_list.remove_if([](const Node *a){
-            if (a->get_wins() < -500)
+            if (a->get_wins() < -500 - std::get<2>(a->get_move()))
                 return (true);
             return (false);
         });
-    std::cout << "After removing neg" << std::endl;
-    for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
-    {
-        (*it)->print_node();
-    }
+    // std::cout << "After removing neg" << std::endl;
+    // for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
+    // {
+    //     (*it)->print_node();
+    // }
     _child_list.sort([](const Node *a, const Node *b){
         if ((double)a->get_visits() + std::get<2>(*(a->_move))  >  (double)b->get_visits() + std::get<2>(*(b->_move)))
             return (true);
         return (false);
     });
-    std::cout << "Node list : " << std::endl;
-    for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
-    {
-        (*it)->print_node();
-    }
+    // std::cout << "Node list : " << std::endl;
+    // for (auto it = _child_list.begin(); it != _child_list.end(); ++it)
+    // {
+    //     (*it)->print_node();
+    // }
     return (_child_list.front());
 }
 

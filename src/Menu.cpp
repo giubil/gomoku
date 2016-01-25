@@ -64,7 +64,6 @@ int Menu::menuLoop()
                 _window.close();
             else if (button1.getGlobalBounds().contains(mousePos.x, mousePos.y) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                std::cout << "ok" << std::endl;
                 _game = new Game();
                 _game->setPlayer(0, new Player());
                 _game->setPlayer(1, new AI());

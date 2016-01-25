@@ -8,7 +8,7 @@
 #include "State.hpp"
 #include "Node.hh"
 
-# define MAX_DEPTH 20
+# define MAX_DEPTH 15
 # define ITER_MAX 1024
 
 class AI : public APlayer {

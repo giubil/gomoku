@@ -22,7 +22,7 @@ void Game::manage_suggestion()
             return;
         else if (!_suggest_slow)
             setSuggestion(std::get<0>(move), std::get<1>(move));
-        std::cout << (_playerTurn?("WHITE"):("BLACK")) << std::endl;
+        // std::cout << (_playerTurn?("WHITE"):("BLACK")) << std::endl;
         _stop_suggestion.try_lock();
         _stop_suggestion.unlock();
     }
@@ -35,7 +35,6 @@ int Game::mainLoop(sf::RenderWindow &window)
     _mutex_suggestion.lock();
     _kill_suggestion.lock();
     _thread_suggestion = std::thread(&Game::manage_suggestion, this);
-    
     _playerTurn = true;
     bool previous = !_playerTurn;
     while (window.isOpen())
@@ -77,7 +76,7 @@ int Game::mainLoop(sf::RenderWindow &window)
                 window.close();
                 return (0);
             }
-            
+
         }
         window.display();
     }
@@ -103,7 +102,6 @@ int Game::eventsHandling(sf::RenderWindow &window)
     while (!done)
     {
         Map *m = new Map(_map);
-        clock_t tStart = clock();
         t = _players[p]->play(*m, _ref, window);
         delete m;
         if (t == nullptr)

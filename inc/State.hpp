@@ -50,7 +50,7 @@ class State
       {
         if (_map->get_occ_case(i, J) == case_type::EMPTY)
         {
-            buff_player = _whose_turn == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
+            buff_player = _whose_turn;// == APlayer::WHITE ? APlayer::BLACK : APlayer::WHITE;
             int buff_ref = _map->get_ref_case(i, J);
             if ((buff_player == APlayer::WHITE && buff_ref != DISALLOW_WHITE)
                 || (buff_player == APlayer::BLACK && buff_ref != DISALLOW_BLACK))
@@ -60,7 +60,11 @@ class State
                         buff_color = _map->get_ref_winning(i, J);
                         if (buff_color == WHITE_WINNING || buff_color == BLACK_WINNING)
                         {
-                            ret_moves.push_back(std::tuple<int, int, int>(i, J, 1000));
+                            if ((buff_color == WHITE_WINNING && _whose_turn == APlayer::player_color::WHITE)
+                            || (buff_color == BLACK_WINNING && _whose_turn == APlayer::player_color::BLACK))
+                                ret_moves.push_back(std::tuple<int, int, int>(i, J, 2000));
+                            else
+                                ret_moves.push_back(std::tuple<int, int, int>(i, J, 1000));
                         }
                         else if (buff_color != NONE_WINNING)
                         {
