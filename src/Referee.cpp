@@ -150,7 +150,8 @@ void Referee::set_ref_winning_for_four() const
 {
     int tab_patern[][5] = {{2, 0, 2},
         {0, 2, 2},
-        {2, 0, 2, 2}};
+        {2, 0, 2, 2},
+        {0, 2, 2, 2}};
     int tab_buff[][2] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
     unsigned buff_x, buff_y;
     
@@ -161,9 +162,9 @@ void Referee::set_ref_winning_for_four() const
             case_type color = _map->get_occ_case(x, y);
             if (color != EMPTY)
             {
-                for (unsigned k = 1; k < 7; ++k)
+                for (unsigned k = 0; k < 8; ++k)
                 {
-                    for (unsigned i = 0; i < 3; ++i)
+                    for (unsigned i = 0; i < 4; ++i)
                     {
                         if (i < 2)
                         {
@@ -194,7 +195,7 @@ void Referee::set_ref_winning_for_four() const
                                 }
                             }
                         }
-                        else if (i == 2)
+                        else
                         {
                             unsigned j = 0;
                             for (; j < 4; ++j)
@@ -210,7 +211,10 @@ void Referee::set_ref_winning_for_four() const
                             }
                             if (j == 4)
                             {
-                                _map->set_ref_winning(x + (tab_buff[k][0] * 2), y + (tab_buff[k][1] * 2), (color == WHITE)?WHITE_WINNING:BLACK_WINNING);
+                                if (i == 2)
+                                    _map->set_ref_winning(x + (tab_buff[k][0] * 2), y + (tab_buff[k][1] * 2), (color == WHITE)?WHITE_WINNING:BLACK_WINNING);
+                                if (i == 3)
+                                    _map->set_ref_winning(x + (tab_buff[k][0]), y + (tab_buff[k][1]), (color == WHITE)?WHITE_WINNING:BLACK_WINNING);
                             }
                             
                         }
